@@ -2,11 +2,10 @@
 
 public class Travel: Entity, IAggregateRoot
 {
-    public string? GetUserId => _userId;
-    private string? _userId;
+    public string UserId { get; set; }
     public Place Place { get; private set; }
-    public DateTime DateStartTravel { get; set; }
-    public DateTime DateFinishTravel { get; set; }
+    public DateTime? DateStartTravel { get; set; }
+    public DateTime? DateFinishTravel { get; set; }
 
     private List<PhotoAlbum> _photoAlbums = new List<PhotoAlbum>();
     public IEnumerable<PhotoAlbum> Albums => _photoAlbums.AsReadOnly();
@@ -14,15 +13,15 @@ public class Travel: Entity, IAggregateRoot
     private List<Article> _articles = new List<Article>();
     public IEnumerable<Article> Articles => _articles.AsReadOnly();
 
-    public Travel(string? userId)
+    public Travel(string userId)
     {
-        _userId = userId;
+        UserId = userId;
     }
 
-    public Travel(string? userId, Place place, DateTime dateStartTravel, DateTime dateFinishTravel,
+    public Travel(string userId, Place place, DateTime dateStartTravel, DateTime dateFinishTravel,
                   List<PhotoAlbum> photoAlbums, List<Article> articles)
     {
-        _userId = userId;
+        UserId = userId;
         Place = place;
         DateStartTravel = dateStartTravel;
         DateFinishTravel = dateFinishTravel;

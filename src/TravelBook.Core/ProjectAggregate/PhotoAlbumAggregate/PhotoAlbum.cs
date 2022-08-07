@@ -14,12 +14,13 @@ public class PhotoAlbum: Entity
         TravelId = travelId;
     }
 
-    public void AddItem(Photo newPhoto)
+    public void AddPhotos(params Photo[] newPhotos)
     {
-        _photos.Add(newPhoto);
+        _photos.AddRange(newPhotos);
     }
-    public void RemoveItem(Photo photo)
+    public void RemovePhotos(params Photo[] photos)
     {
-        _photos.Remove(photo);
+        foreach (Photo photo in photos)
+            _photos.Remove(photo);
     }
 }
