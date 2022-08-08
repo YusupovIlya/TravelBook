@@ -11,23 +11,18 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Ardalis.ApiEndpoints" />
-    <PackageReference Include="Ardalis.ListStartupServices" />
-    <PackageReference Include="Ardalis.Result" />
-    <PackageReference Include="Ardalis.Result.AspNetCore" />
-    <PackageReference Include="MediatR" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" PrivateAssets="All" />
-    <PackageReference Include="Serilog.Sinks.ApplicationInsights" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
-    <PackageReference Include="Serilog.AspNetCore" />
-    <PackageReference Include="NETStandard.Library" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+    <ProjectReference Include="..\TravelBook.Infrastructure\TravelBook.Infrastructure.csproj" />
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\TravelBook.Infrastructure\TravelBook.Infrastructure.csproj" />
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   
 </Project>
