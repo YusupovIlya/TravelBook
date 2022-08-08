@@ -1,4 +1,4 @@
-﻿using TravelBook.Web.Service;
+using TravelBook.Web.Service;
 using TravelBook.Infrastructure.Repositories;
 using TravelBook.Core.ProjectAggregate;
 using TravelBook.Infrastructure;
@@ -6,13 +6,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+//var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");
 
 builder.Configuration.Bind("Project", new Config());
-
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(AppDbContext))));
 builder.Services.AddTransient<ITravelRepository, TravelRepository>();
 builder.Services.AddTransient<IPhotoAlbumRepository, PhotoAlbumRepository>();
 
-builder.Services.AddDbContext<AppDbContext>();
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+//    .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(opts =>
 {
@@ -33,7 +36,15 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddAuthorization(p =>
+{
+    p.AddPolicy("AdminArea", policy => { policy.RequireRole("admin"); });
+});
+
+builder.Services.AddControllersWithViews(a =>
+{
+    a.Conventions.Add(new AdminAreaAuthorization("Admin", "AdminArea"));
+});
 
 var app = builder.Build();
 
@@ -54,8 +65,11 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute("admin", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();
