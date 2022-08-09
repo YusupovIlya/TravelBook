@@ -6,6 +6,8 @@
 -->
 <html>
 	<head>
+		@await Html.PartialAsync("ScriptsPartial")
+		@RenderSection("scripts", required: false)
 		@await Html.PartialAsync("MetaTagsPartial")
 		@await Html.PartialAsync("CssPartial")
 	</head>
@@ -29,9 +31,6 @@
 
 		<!-- Sidebar -->
 		@await Html.PartialAsync("SideBarPartial")
-
-		<!-- Scripts -->
-		@await Html.PartialAsync("ScriptsPartial")
 
 	</body>
 </html>
