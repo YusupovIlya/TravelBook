@@ -1,10 +1,41 @@
-﻿<div id="sidebar">
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
+@{
+    var usr = await UserManager.GetUserAsync(User);
+    var email = usr?.Email;
+}
+
+<div id="sidebar">
 
 	<!-- Logo -->
-		<h1 id="logo"><a href="#">Travel Diary</a></h1>
+		<h1 id="logo"><a href="#">Travel Book</a></h1>
+		@if(email != null){
+			<div style="text-align:center; margin-top:10px;">
+				<h4>Hello! - 
+					<a asp-action="AboutMe" asp-controller="Account">@email</a>
+				</h4>
+			</div>
+		}
 
 	<!-- Nav -->
-	@await Html.PartialAsync("NavBarPartial")
+	<nav id="nav">
+		@if(email != null)
+		{
+			<ul>
+				<li class="current"><a asp-action="Travels" asp-controller="Travel">My Travels</a></li>
+				<li><a asp-action="Notes" asp-controller="Travel">My Notes</a></li>
+				<li><a asp-action="PhotoAlbums" asp-controller="Travel">My Photoalbums</a></li>
+			</ul>
+		}
+		else
+		{
+			<ul>
+				<li class="current"><a asp-action="Travels" asp-controller="Travel">Login</a></li>
+				<li><a asp-action="Notes" asp-controller="Travel">About Travel Book</a></li>
+			</ul>			
+		}
+	</nav>
 
 	<!-- Search -->
 		<section class="box search">
@@ -12,16 +43,6 @@
 				<input type="text" class="text" name="search" placeholder="Search" />
 			</form>
 		</section>
-
-	<!-- Text -->
-@*					<section class="box text-style1">
-			<div class="inner">
-				<p>
-					<strong>Striped:</strong> A free and fully responsive HTML5 site
-					template designed by <a href="http://twitter.com/ajlkn">AJ</a> for <a href="http://html5up.net/">HTML5 UP</a>
-				</p>
-			</div>
-		</section>*@
 
 	<!-- Recent Posts -->
 	@await Html.PartialAsync("RecentPostsPartial")

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");
 
-builder.Configuration.Bind("Project", new Config());
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(AppDbContext))));
 builder.Services.AddTransient<ITravelRepository, TravelRepository>();
 builder.Services.AddTransient<IPhotoAlbumRepository, PhotoAlbumRepository>();
@@ -29,10 +28,10 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(opts =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.Cookie.Name = "myCompanyAuth";
+    options.Cookie.Name = "TravelBookAuth";
     options.Cookie.HttpOnly = true;
-    options.LoginPath = "/account/login";
-    options.AccessDeniedPath = "/account/accessdenied";
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
     options.SlidingExpiration = true;
 });
 
@@ -45,6 +44,8 @@ builder.Services.AddControllersWithViews(a =>
 {
     a.Conventions.Add(new AdminAreaAuthorization("Admin", "AdminArea"));
 });
+
+builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
 var app = builder.Build();
 
@@ -69,7 +70,7 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute("admin", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-    endpoints.MapControllerRoute("default", "{controller=Account}/{action=Login}/{id?}");
+    endpoints.MapControllerRoute("default", "{controller=Account}/{action=Login}/{returnUrl=/Account/AboutMe}");
 });
 
 app.Run();

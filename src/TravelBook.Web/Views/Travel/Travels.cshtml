@@ -1,0 +1,41 @@
+﻿@model IEnumerable<TravelBook.Web.ViewModels.TravelViewModels.TravelsForUserViewModel>
+
+@{
+    ViewBag.Title = "My Travels";
+}
+
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Place
+            </th>
+            <th>
+                Period
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.Place.Country, @item.Place.City, @item.Place.Street</td>
+            <td>
+                @item.DateStartTravel.Value.ToShortDateString() - @item.DateFinishTravel.Value.ToShortDateString()
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {  id=item.Id  }) |
+                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<form asp-action="Create" asp-controller="Travel" method="get">
+    <input type="submit" value="Add new travel" />
+</form>

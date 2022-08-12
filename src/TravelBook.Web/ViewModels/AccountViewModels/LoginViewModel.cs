@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TravelBook.Web.ViewModels;
+namespace TravelBook.Web.ViewModels.AccountViewModels;
 
 public class LoginViewModel
 {

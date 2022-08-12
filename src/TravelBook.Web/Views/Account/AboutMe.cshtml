@@ -1,0 +1,30 @@
+﻿@model TravelBook.Web.ViewModels.AccountViewModels.AboutMeViewModel
+
+@{
+    ViewBag.Title = "About me";
+}
+
+<h2>My Account</h2>
+
+<div class="col-md-4">
+    <p>
+        @Html.DisplayNameFor(model => model.UserName)
+        @Html.DisplayFor(model => model.UserName)
+    </p>
+    <p>
+        @Html.DisplayNameFor(model => model.Email)
+        @Html.DisplayFor(model => model.Email)
+    </p>
+    <p>
+        @Html.DisplayNameFor(model => model.PhoneNumber)
+        @Html.DisplayFor(model => model.PhoneNumber)
+    </p>
+</div>
+<div>
+    <p>
+        <a asp-action="ChangePassword">Change your password?</a>
+    </p>
+    <p>
+        <a asp-action="Logout">Logout</a>
+    </p>
+</div>
