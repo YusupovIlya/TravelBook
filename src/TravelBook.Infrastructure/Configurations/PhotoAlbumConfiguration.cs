@@ -14,7 +14,7 @@ public class PhotoAlbumConfiguration : IEntityTypeConfiguration<PhotoAlbum>
 
         builder
             .HasOne(pa => pa.Travel)
-            .WithMany(t => t.Albums)
+            .WithMany(t => t.PhotoAlbums)
             .HasForeignKey(pa => pa.TravelId);
     }
 }

@@ -1,0 +1,59 @@
+﻿@using TravelBook.Web.Controllers
+@using TravelBook.Web.ViewModels.PhotoAlbumViewModels;
+
+@model OpenPhotoAlbumViewModel
+
+@{
+    ViewBag.Title = Model.Travel;
+}
+
+<h2 style="text-align:center">@Model.Title</h2>
+@{
+    int cnt = 0;
+    int numPhotos = Model.Photos.Count;
+    @for(int i = 0; i < (Model.Photos.Count / 4) + 1; i++)
+    {
+        <div class="row" style="margin-top:10px;">
+        @for(int j = 1; j <= 4; j++)
+        {
+             if (cnt == numPhotos) break;
+            <div class="column">
+                <img src="@Model.Photos[cnt].ImagePath" style="width:100%" onclick="openModal();currentSlide(@(cnt+1))" class="hover-shadow cursor">
+            </div>
+            cnt++;
+        }
+        </div>
+    }
+
+<div id="myModal" class="modal">
+  <span class="close cursor" onclick="closeModal()">&times;</span>
+  <div class="modal-content">
+
+    @for(int i = 0; i < numPhotos; i++)
+    {
+        <div class="mySlides">
+          <div class="numbertext">@(i+1) / @numPhotos</div>
+          <img src="@Model.Photos[i].ImagePath" style="width:100%">
+        </div>        
+    }
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+    <div class="caption-container">
+      <p id="caption"></p>
+    </div>
+  </div>
+</div>
+}
+
+<form asp-action="AddPhotos" asp-controller="PhotoAlbums" method="post">
+    <input asp-for="Id" hidden="hidden" />
+    <input type="submit" value="Add photos to album" />
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/photoalbum.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/js/photoalbum.js" asp-append-version="true"></script>
+}

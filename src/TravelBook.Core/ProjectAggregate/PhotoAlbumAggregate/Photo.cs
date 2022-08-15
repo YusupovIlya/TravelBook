@@ -2,8 +2,8 @@
 public class Photo: Entity
 {
     public string ImagePath { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public Place Place { get; set; }
+    public string? Title { get; set; }
+    public Place? Place { get; set; }
     public int PhotoAlbumId { get; set; }
     public PhotoAlbum? PhotoAlbum { get; set; }
 

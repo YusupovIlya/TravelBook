@@ -29,7 +29,7 @@
             </td>
             <td>
                 @Html.ActionLink("Articles", "TravelArticles", "Articles", new { travelId=item.Id }) |
-                @Html.ActionLink("Photoalbums", "Photoalbums", new { id=item.Id }) |
+                @Html.ActionLink("Photoalbums", "TravelPhotoAlbums", "Photoalbums", new { travelId=item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new {  id=item.Id  }) |
             </td>
         </tr>

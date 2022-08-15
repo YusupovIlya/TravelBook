@@ -45,6 +45,8 @@ builder.Services.AddControllersWithViews(a =>
     a.Conventions.Add(new AdminAreaAuthorization("Admin", "AdminArea"));
 });
 
+builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
 var app = builder.Build();
@@ -59,6 +61,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 
 app.UseRouting();
 

@@ -9,6 +9,7 @@
 		@await Html.PartialAsync("ScriptsPartial")
 		@RenderSection("scripts", required: false)
 		@await Html.PartialAsync("MetaTagsPartial")
+		@RenderSection("Styles", required: false)
 		@await Html.PartialAsync("CssPartial")
 	</head>
 	<body class="is-preload">

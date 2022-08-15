@@ -39,11 +39,38 @@ public class TravelRepository : ITravelRepository
         return allTravelForUser;
     }
 
+    public async Task<(string ownerId, Article)> GetArticleById(int articleId)
+    {
+        var article = await _context.Articles
+            .Include(a => a.Travel)
+            .FirstOrDefaultAsync(a => a.Id == articleId);
+        if (article == null)
+            throw new NullReferenceException("Article not found with this id.");
+        var ownerId = article.Travel.UserId;
+        return (ownerId, article);
+    }
+
+    public async Task<(string ownerId, Article[])> GetArticlesByTravelId(int travelId)
+    {
+        var articles = await _context.Articles
+            .Include(a => a.Travel)
+            .Where(a => a.TravelId == travelId)
+            .AsNoTracking()
+            .ToArrayAsync();
+
+        if (articles.Length == 0)
+            throw new ArgumentNullException("Not found articles for with this travelId");
+
+        var ownerId = articles.First().Travel.UserId; 
+
+        return (ownerId, articles);
+    }
+
     public async Task<Travel> GetTravelById(int travelId)
     {
         var travel = await _context.Travels
             .Include(t => t.Articles)
-            .Include(t => t.Albums)
+            .Include(t => t.PhotoAlbums)
                 .ThenInclude(pa => pa.Photos)
             .FirstOrDefaultAsync(t => t.Id == travelId);
         if (travel == null)

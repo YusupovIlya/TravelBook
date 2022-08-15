@@ -1,0 +1,45 @@
+﻿@using TravelBook.Web.Controllers
+@using TravelBook.Web.ViewModels.PhotoAlbumViewModels;
+
+@model IEnumerable<PhotoAlbumViewModel>
+
+@{
+    ViewBag.Title = "Travel photoalbums";
+}
+
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Travel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumPhotos)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.Travel</td>
+            <td>@item.Title</td>
+            <td>@item.NumPhotos pcs.</td>
+            <td>
+                @Html.ActionLink("Open", "Open", "PhotoAlbums", new { userId=ViewData["userId"], photoAlbumId=item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new {  userId=ViewData["userId"], photoAlbumId=item.Id  })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<form asp-action="Create" asp-controller="PhotoAlbums" method="get">
+    <input type="submit" value="Add new photoalbum" />
+</form>

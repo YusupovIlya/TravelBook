@@ -20,47 +20,57 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         return photoAlbum.Id;
     }
 
-    public async Task<bool> Delete(int photoAlbumId)
-    {
-        bool res;
-        PhotoAlbum? album = await GetAlbumById(photoAlbumId);
-        _context.PhotoAlbums.Remove(album);
-        res = true;
-        await _context.SaveChangesAsync();
-        return res;
-    }
+    //public async Task<bool> Delete(int photoAlbumId)
+    //{
+    //    bool res;
+    //    PhotoAlbum? album = await GetAlbumById(photoAlbumId);
+    //    _context.PhotoAlbums.Remove(album);
+    //    res = true;
+    //    await _context.SaveChangesAsync();
+    //    return res;
+    //}
 
-    public async Task AddPhotosToAlbum(int photoAlbumId, params Photo[] photos)
-    {
-        PhotoAlbum album = await GetAlbumById(photoAlbumId);
-        album.AddPhotos(photos);
-        await _context.SaveChangesAsync();
-    }
-    public async Task RemovePhotosFromAlbum(int photoAlbumId, params Photo[] photos)
-    {
-        PhotoAlbum album = await GetAlbumById(photoAlbumId);
-        album.RemovePhotos(photos);
-        await _context.SaveChangesAsync();
-    }
+    //public async Task AddPhotosToAlbum(int photoAlbumId, params Photo[] photos)
+    //{
+    //    PhotoAlbum album = await GetAlbumById(photoAlbumId);
+    //    album.AddPhotos(photos);
+    //    await _context.SaveChangesAsync();
+    //}
+    //public async Task RemovePhotosFromAlbum(int photoAlbumId, params Photo[] photos)
+    //{
+    //    PhotoAlbum album = await GetAlbumById(photoAlbumId);
+    //    album.RemovePhotos(photos);
+    //    await _context.SaveChangesAsync();
+    //}
 
-    public async Task<PhotoAlbum?> GetAlbumById(int photoAlbumId)
+    public async Task<(string ownerId, PhotoAlbum album)> GetAlbumById(int photoAlbumId)
     {
         var album = await _context.PhotoAlbums
             .Include(pa => pa.Photos)
+            .Include(pa => pa.Travel)
             .FirstOrDefaultAsync(p => p.Id == photoAlbumId);
+
         if (album == null)
-            throw new NullReferenceException("Album not found with this id.");
-        else
-            return album;
+            throw new NullReferenceException("Photoalbum not found with this id.");
+
+        var ownerId = album.Travel.UserId;
+
+        return (ownerId, album);
     }
 
-    public async Task<PhotoAlbum[]> GetAllAlbums(int travelId)
+    public async Task<(string ownerId, PhotoAlbum[] albums)> GetTravelPhotoAlbums(int travelId)
     {
         var allTravelAlbums = await _context.PhotoAlbums
             .Include(pa => pa.Photos)
+            .Include(pa => pa.Travel)
             .AsNoTracking()
             .ToArrayAsync();
 
-        return allTravelAlbums;
+        if (allTravelAlbums.Length == 0)
+            throw new ArgumentNullException("Not found albums for with this travelId");
+
+        var ownerId = allTravelAlbums.First().Travel.UserId;
+
+        return (ownerId, allTravelAlbums);
     }
 }

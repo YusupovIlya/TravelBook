@@ -28,7 +28,7 @@ public class TravelController : Controller
     {
         var userId = await GetUserId();
         var travels = await _travelRepository.GetAllTravelForUser(userId);
-        var travelsModel = _mapper.Map<IEnumerable<TravelsForUserViewModel>>(travels);
+        var travelsModel = _mapper.Map<IEnumerable<TravelViewModel>>(travels);
         return View(travelsModel);
     }
 

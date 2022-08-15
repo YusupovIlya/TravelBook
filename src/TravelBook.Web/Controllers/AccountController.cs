@@ -49,7 +49,7 @@ namespace TravelBook.Web.Controllers
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 }
                 else {
-                    var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, false, lockoutOnFailure: false);
+                    var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
                         _logger.LogInformation($"User - {model.Email} logged in.");

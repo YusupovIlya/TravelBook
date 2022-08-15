@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelBook.Infrastructure;
 
@@ -11,9 +12,10 @@ using TravelBook.Infrastructure;
 namespace TravelBook.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220813104534_ChangePlaceProperty")]
+    partial class ChangePlaceProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +54,7 @@ namespace TravelBook.Infrastructure.Migrations
                         new
                         {
                             Id = "44546e06-8719-4ad8-b88a-f271ae9d6eab",
-                            ConcurrencyStamp = "7f66b294-c9f8-41d9-9627-c66e5407cc42",
+                            ConcurrencyStamp = "6e2aae7b-148c-4de8-addd-35041b6593ad",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
@@ -152,13 +154,13 @@ namespace TravelBook.Infrastructure.Migrations
                         {
                             Id = "3b62472e-4f66-49fa-a20f-e7685b9565d8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c8990a3e-4c22-42d4-96d3-6f48378cc1b5",
+                            ConcurrencyStamp = "39732592-5e8c-416c-b3f8-0cb53cf3c8a0",
                             Email = "my@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MY@EMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEA1PlQ6UdGpp67LJvxzozxY3x9y0/BiEx+IbvMUmPsW0KnUR/wvM/zZ721qZ4HCa0A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMMfN8cZu4NiTvX/U60oCFRcQgfAcWW3PwLM68qxSMHRyrbcff7mz5DNKE7Gtt7+lg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -296,6 +298,7 @@ namespace TravelBook.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -443,13 +446,14 @@ namespace TravelBook.Infrastructure.Migrations
 
                     b.Navigation("PhotoAlbum");
 
-                    b.Navigation("Place");
+                    b.Navigation("Place")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TravelBook.Core.ProjectAggregate.PhotoAlbum", b =>
                 {
                     b.HasOne("TravelBook.Core.ProjectAggregate.Travel", "Travel")
-                        .WithMany("PhotoAlbums")
+                        .WithMany("Albums")
                         .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -491,9 +495,9 @@ namespace TravelBook.Infrastructure.Migrations
 
             modelBuilder.Entity("TravelBook.Core.ProjectAggregate.Travel", b =>
                 {
-                    b.Navigation("Articles");
+                    b.Navigation("Albums");
 
-                    b.Navigation("PhotoAlbums");
+                    b.Navigation("Articles");
                 });
 #pragma warning restore 612, 618
         }

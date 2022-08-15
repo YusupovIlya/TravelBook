@@ -2,7 +2,7 @@
 
 namespace TravelBook.Web.ViewModels.TravelViewModels;
 
-public class TravelsForUserViewModel
+public class TravelViewModel
 {
     public int Id { get; set; }
     public Place Place { get; private set; }

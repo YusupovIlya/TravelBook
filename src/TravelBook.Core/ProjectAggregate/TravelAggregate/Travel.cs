@@ -8,7 +8,7 @@ public class Travel: Entity, IAggregateRoot
     public DateTime? DateFinishTravel { get; set; }
 
     private List<PhotoAlbum> _photoAlbums = new List<PhotoAlbum>();
-    public IEnumerable<PhotoAlbum> Albums => _photoAlbums.AsReadOnly();
+    public IEnumerable<PhotoAlbum> PhotoAlbums => _photoAlbums.AsReadOnly();
 
     private List<Article> _articles = new List<Article>();
     public IEnumerable<Article> Articles => _articles.AsReadOnly();
