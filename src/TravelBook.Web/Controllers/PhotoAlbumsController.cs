@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using TravelBook.Web.ViewModels.PhotoAlbumViewModels;
 using TravelBook.Core.ProjectAggregate;
 using TravelBook.Infrastructure;
+using TravelBook.Web.Service;
 
 namespace TravelBook.Web.Controllers
 {
@@ -16,15 +17,17 @@ namespace TravelBook.Web.Controllers
         private readonly ILogger<TravelController> _logger;
         private readonly IMapper _mapper;
         private readonly IPhotoAlbumRepository _photoAlbumRepository;
-
+        private readonly IFilesService _filesService;
         public PhotoAlbumsController(UserManager<IdentityUser> userManager,
                                 ILogger<TravelController> logger,
                                 IMapper mapper,
-                                IPhotoAlbumRepository photoAlbumRepository) : base(userManager)
+                                IPhotoAlbumRepository photoAlbumRepository,
+                                IFilesService filesService) : base(userManager)
         {
             _logger = logger;
             _mapper = mapper;
             _photoAlbumRepository = photoAlbumRepository;
+            _filesService = filesService;
         }
 
         [HttpGet]
@@ -67,6 +70,32 @@ namespace TravelBook.Web.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult UploadPhotosToAlbum(int Id)
+        {
+            ViewData["photoAlbumId"] = Id;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> UploadPhotosToAlbum([FromForm] IFormFileCollection images, [FromForm] int photoAlbumId)
+        {
+            try
+            {
+                (string ownerId, PhotoAlbum album) = await _photoAlbumRepository.GetAlbumById(photoAlbumId);
+                if (CheckAccessByUserId(ownerId))
+                {
+                    Photo[] uploadedPhotos = await _filesService.UploadPhotos(images, UserId, album.Id);
+                    await _photoAlbumRepository.AddPhotosToAlbum(album, uploadedPhotos);
+                    return RedirectToAction("Open", new { photoAlbumId = photoAlbumId });
+                }
+                else
+                    return Forbid();
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+        }
         //// GET: PhotoAlbums
         //public async Task<IActionResult> Index()
         //{
@@ -203,7 +232,7 @@ namespace TravelBook.Web.Controllers
         //    {
         //        _context.PhotoAlbums.Remove(photoAlbum);
         //    }
-            
+
         //    await _context.SaveChangesAsync();
         //    return RedirectToAction(nameof(Index));
         //}

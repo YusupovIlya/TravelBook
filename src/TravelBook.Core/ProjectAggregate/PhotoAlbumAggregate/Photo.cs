@@ -7,9 +7,14 @@ public class Photo: Entity
     public int PhotoAlbumId { get; set; }
     public PhotoAlbum? PhotoAlbum { get; set; }
 
-    public Photo(string imagePath, string title, int photoAlbumId)
+    public Photo(string imagePath)
     {
         ImagePath = imagePath;
+    }
+
+    public Photo(string imagePath, string title, int photoAlbumId)
+        :this(imagePath)
+    {
         Title = title;
         PhotoAlbumId = photoAlbumId;
     }

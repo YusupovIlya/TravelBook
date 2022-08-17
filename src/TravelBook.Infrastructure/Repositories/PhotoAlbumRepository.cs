@@ -30,12 +30,11 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
     //    return res;
     //}
 
-    //public async Task AddPhotosToAlbum(int photoAlbumId, params Photo[] photos)
-    //{
-    //    PhotoAlbum album = await GetAlbumById(photoAlbumId);
-    //    album.AddPhotos(photos);
-    //    await _context.SaveChangesAsync();
-    //}
+    public async Task AddPhotosToAlbum(PhotoAlbum album, params Photo[] photos)
+    {
+        album.AddPhotos(photos);
+        await _context.SaveChangesAsync();
+    }
     //public async Task RemovePhotosFromAlbum(int photoAlbumId, params Photo[] photos)
     //{
     //    PhotoAlbum album = await GetAlbumById(photoAlbumId);

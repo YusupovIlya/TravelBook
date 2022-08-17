@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Log in";
+}
+
+<div class="row">
+    <div class="col-md-2">
+        <section>
+            <form asp-controller="PhotoAlbums" asp-action="UploadPhotosToAlbum" method="post" enctype="multipart/form-data">
+                <h2>Upload photos to album</h2>
+                <hr />
+                <div class="form-floating">
+                    <input name="images" type="file" multiple="true" />
+                    <input value="@ViewData["photoAlbumId"]" name="photoAlbumId" hidden="hidden" />
+                </div>
+                <div style="margin-top:10px;">
+                    <button type="submit">Send</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

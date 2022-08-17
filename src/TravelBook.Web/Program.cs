@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(AppDbContext))));
 builder.Services.AddTransient<ITravelRepository, TravelRepository>();
 builder.Services.AddTransient<IPhotoAlbumRepository, PhotoAlbumRepository>();
+builder.Services.AddScoped<IFilesService, FilesService>();
 
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -73,6 +74,7 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute("admin", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    //endpoints.MapControllerRoute("default", "{controller=PhotoAlbums}/{action=UploadPhotosToAlbum}/{id=1}");
     endpoints.MapControllerRoute("default", "{controller=Account}/{action=Login}/{returnUrl=/Account/AboutMe}");
 });
 
