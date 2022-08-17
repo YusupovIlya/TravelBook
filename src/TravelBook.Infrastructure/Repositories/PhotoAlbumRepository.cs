@@ -20,15 +20,11 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         return photoAlbum.Id;
     }
 
-    //public async Task<bool> Delete(int photoAlbumId)
-    //{
-    //    bool res;
-    //    PhotoAlbum? album = await GetAlbumById(photoAlbumId);
-    //    _context.PhotoAlbums.Remove(album);
-    //    res = true;
-    //    await _context.SaveChangesAsync();
-    //    return res;
-    //}
+    public async Task Delete(PhotoAlbum photoAlbum)
+    {
+        _context.PhotoAlbums.Remove(photoAlbum);
+        await _context.SaveChangesAsync();
+    }
 
     public async Task AddPhotosToAlbum(PhotoAlbum album, params Photo[] photos)
     {

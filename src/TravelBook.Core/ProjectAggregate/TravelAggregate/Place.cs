@@ -19,4 +19,8 @@ public class Place: ValueObject
         yield return Country;
         yield return City;
     }
+    public override string ToString()
+    {
+        return $"{this.Country}, {this.City}";
+    }
 }

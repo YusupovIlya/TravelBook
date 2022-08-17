@@ -10,15 +10,14 @@ namespace TravelBook.Web.Controllers
     public class TravelsController : BaseController
     {
         private readonly ILogger<TravelController> _logger;
-        private readonly IMapper _mapper;
         private readonly ITravelRepository _travelRepository;
         public TravelsController(UserManager<IdentityUser> userManager,
-                                ILogger<TravelController> logger,
-                                IMapper mapper,
-                                ITravelRepository travelRepository) : base(userManager)
+                                 ILogger<TravelController> logger,
+                                 IMapper mapper,
+                                 ITravelRepository travelRepository)
+                                 : base(userManager, mapper)
         {
             _logger = logger;
-            _mapper = mapper;
             _travelRepository = travelRepository;
         }
 

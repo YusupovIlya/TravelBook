@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TravelBook.Core.ProjectAggregate;
 
@@ -21,6 +22,12 @@ public class TravelConfiguration : IEntityTypeConfiguration<Travel>
             .HasColumnType("date");
 
         builder.OwnsOne(o => o.Place);
+
+        builder
+            .HasOne<IdentityUser>()
+            .WithMany()
+            .HasForeignKey(t => t.UserId);
+
     }
 }
 

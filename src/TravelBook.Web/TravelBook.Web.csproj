@@ -19,11 +19,14 @@
     <Folder Include="Areas\Admin\Views\" />
     <Folder Include="Areas\User\Controllers\" />
     <Folder Include="Areas\User\Views\" />
+    <Folder Include="wwwroot\usersData\3b62472e-4f66-49fa-a20f-e7685b9565d8\" />
   </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">

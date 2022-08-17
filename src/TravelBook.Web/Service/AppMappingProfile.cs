@@ -15,13 +15,13 @@ public class AppMappingProfile: Profile
 		CreateMap<Travel, TravelViewModel>();
 
 		CreateMap<Article, ArticleViewModel>()
-			.ForMember(dest => dest.Place, opt => opt.MapFrom(src => $"{src.Travel.Place.Country}, {src.Travel.Place.City}"));
+			.ForMember(dest => dest.Place, opt => opt.MapFrom(src => src.Travel.Place.ToString()));
 
 		CreateMap<PhotoAlbum, PhotoAlbumViewModel>()
-			.ForMember(dest => dest.Travel, opt => opt.MapFrom(src => $"{src.Travel.Place.Country}, {src.Travel.Place.City}"))
+			.ForMember(dest => dest.Travel, opt => opt.MapFrom(src => src.Travel.Place.ToString()))
 			.ForMember(dest => dest.NumPhotos, opt => opt.MapFrom(src => src.Photos.Count()));
 
 		CreateMap<PhotoAlbum, OpenPhotoAlbumViewModel>()
-			.ForMember(dest => dest.Travel, opt => opt.MapFrom(src => $"{src.Travel.Place.Country}, {src.Travel.Place.City}"));
+			.ForMember(dest => dest.Travel, opt => opt.MapFrom(src => src.Travel.Place.ToString()));
 	}
 }

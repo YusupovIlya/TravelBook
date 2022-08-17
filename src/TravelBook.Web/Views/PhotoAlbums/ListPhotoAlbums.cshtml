@@ -32,8 +32,8 @@
             <td>@item.Title</td>
             <td>@item.NumPhotos pcs.</td>
             <td>
-                @Html.ActionLink("Open", "Open", "PhotoAlbums", new { userId=ViewData["userId"], photoAlbumId=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new {  userId=ViewData["userId"], photoAlbumId=item.Id  })
+                @Html.ActionLink("Open", "Open", "PhotoAlbums", new { photoAlbumId=item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new {  photoAlbumId=item.Id, returnUrl=ViewBag.returnUrl  })
             </td>
         </tr>
 }

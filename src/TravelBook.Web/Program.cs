@@ -4,6 +4,8 @@ using TravelBook.Core.ProjectAggregate;
 using TravelBook.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using MediatR;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");
@@ -50,6 +52,8 @@ builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true
 
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -75,7 +79,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute("admin", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
     //endpoints.MapControllerRoute("default", "{controller=PhotoAlbums}/{action=UploadPhotosToAlbum}/{id=1}");
-    endpoints.MapControllerRoute("default", "{controller=Account}/{action=Login}/{returnUrl=/Account/AboutMe}");
+    endpoints.MapControllerRoute("default", "{controller=Account}/{action=Login}/{id?}");
 });
 
 app.Run();

@@ -7,27 +7,31 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TravelBook.Web.ViewModels.PhotoAlbumViewModels;
 using TravelBook.Core.ProjectAggregate;
+using TravelBook.Core.Events;
 using TravelBook.Infrastructure;
 using TravelBook.Web.Service;
+using MediatR;
 
 namespace TravelBook.Web.Controllers
 {
     public class PhotoAlbumsController : BaseController
     {
         private readonly ILogger<TravelController> _logger;
-        private readonly IMapper _mapper;
         private readonly IPhotoAlbumRepository _photoAlbumRepository;
         private readonly IFilesService _filesService;
+        private readonly IMediator _mediator;
         public PhotoAlbumsController(UserManager<IdentityUser> userManager,
-                                ILogger<TravelController> logger,
-                                IMapper mapper,
-                                IPhotoAlbumRepository photoAlbumRepository,
-                                IFilesService filesService) : base(userManager)
+                                     ILogger<TravelController> logger,
+                                     IMapper mapper,
+                                     IPhotoAlbumRepository photoAlbumRepository,
+                                     IFilesService filesService,
+                                     IMediator mediator)
+                                     : base(userManager, mapper)
         {
             _logger = logger;
-            _mapper = mapper;
             _photoAlbumRepository = photoAlbumRepository;
             _filesService = filesService;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -58,6 +62,7 @@ namespace TravelBook.Web.Controllers
                 (string ownerId, PhotoAlbum[] albums) = await _photoAlbumRepository.GetTravelPhotoAlbums(travelId);
                 if (CheckAccessByUserId(ownerId))
                 {
+                    ViewBag.returnUrl = $"{Request.Path}{Request.QueryString}";
                     var photoAlbumsModel = _mapper.Map<IEnumerable<PhotoAlbumViewModel>>(albums);
                     return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml", photoAlbumsModel);
                 }
@@ -71,9 +76,9 @@ namespace TravelBook.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult UploadPhotosToAlbum(int Id)
+        public IActionResult UploadPhotosToAlbum(int photoAlbumId)
         {
-            ViewData["photoAlbumId"] = Id;
+            ViewData["photoAlbumId"] = photoAlbumId;
             return View();
         }
         [HttpPost]
@@ -199,47 +204,54 @@ namespace TravelBook.Web.Controllers
         //    return View(photoAlbum);
         //}
 
-        //// GET: PhotoAlbums/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null || _context.PhotoAlbums == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: PhotoAlbums/Delete/5
+        public async Task<IActionResult> Delete(int photoAlbumId, string? returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/travels/all");
+            try
+            {
+                (string ownerId, PhotoAlbum album) = await _photoAlbumRepository.GetAlbumById(photoAlbumId);
+                if (CheckAccessByUserId(ownerId))
+                {
+                    ViewBag.returnUrl = returnUrl;
+                    var photoAlbumModel = _mapper.Map<PhotoAlbumViewModel>(album);
+                    return View(photoAlbumModel);
+                }
+                else
+                    return Forbid();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+        }
 
-        //    var photoAlbum = await _context.PhotoAlbums
-        //        .Include(p => p.Travel)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (photoAlbum == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(photoAlbum);
-        //}
-
-        //// POST: PhotoAlbums/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    if (_context.PhotoAlbums == null)
-        //    {
-        //        return Problem("Entity set 'AppDbContext.PhotoAlbums'  is null.");
-        //    }
-        //    var photoAlbum = await _context.PhotoAlbums.FindAsync(id);
-        //    if (photoAlbum != null)
-        //    {
-        //        _context.PhotoAlbums.Remove(photoAlbum);
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+        // POST: PhotoAlbums/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int photoAlbumId, string returnUrl)
+        {
+            try
+            {
+                (string ownerId, PhotoAlbum album) = await _photoAlbumRepository.GetAlbumById(photoAlbumId);
+                if (CheckAccessByUserId(ownerId))
+                {
+                    await _photoAlbumRepository.Delete(album);
+                    await _mediator.Publish(new PhotoAlbumDeletedDomainEvent(album));
+                    return LocalRedirect(returnUrl);
+                }
+                else
+                    return Forbid();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+        }
 
         //private bool PhotoAlbumExists(int id)
         //{
-        //  return (_context.PhotoAlbums?.Any(e => e.Id == id)).GetValueOrDefault();
+        //    return (_context.PhotoAlbums?.Any(e => e.Id == id)).GetValueOrDefault();
         //}
     }
 }

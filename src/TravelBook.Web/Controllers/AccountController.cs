@@ -7,31 +7,27 @@ using TravelBook.Web.ViewModels.AccountViewModels;
 namespace TravelBook.Web.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
-        private readonly IMapper _mapper;
         public AccountController(UserManager<IdentityUser> userManager,
                                  SignInManager<IdentityUser> signInManager,
                                  ILogger<AccountController> logger,
                                  IMapper mapper)
+                                 : base(userManager, mapper)
         {
-            _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _mapper = mapper;
         }
 
         [AllowAnonymous]
-        public IActionResult Login(string? returnUrl = null)
+        public IActionResult Login()
         {
             if (_signInManager.IsSignedIn(User))
                 return RedirectToAction("AboutMe");
             else
             {
-                ViewBag.returnUrl = returnUrl;
                 return View();
             }
         }
@@ -39,9 +35,8 @@ namespace TravelBook.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            returnUrl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
                 IdentityUser user = await _userManager.FindByEmailAsync(model.Email);
@@ -54,7 +49,7 @@ namespace TravelBook.Web.Controllers
                     if (result.Succeeded)
                     {
                         _logger.LogInformation($"User - {model.Email} logged in.");
-                        return LocalRedirect(returnUrl);
+                        return RedirectToAction(nameof(AboutMe));
                     }
                     else
                     {

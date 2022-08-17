@@ -47,7 +47,7 @@
 }
 
 <form asp-action="UploadPhotosToAlbum" asp-controller="PhotoAlbums" method="get">
-    <input asp-for="Id" hidden="hidden" />
+    <input name="photoAlbumId" value="@Model.Id" hidden="hidden" />
     <input type="submit" value="Add photos to album" />
 </form>
 
