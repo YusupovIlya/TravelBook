@@ -23,5 +23,7 @@ public class AppMappingProfile: Profile
 
 		CreateMap<PhotoAlbum, OpenPhotoAlbumViewModel>()
 			.ForMember(dest => dest.Travel, opt => opt.MapFrom(src => src.Travel.Place.ToString()));
+
+		CreateMap<Photo, EditPhotoViewModel>().ReverseMap();
 	}
 }

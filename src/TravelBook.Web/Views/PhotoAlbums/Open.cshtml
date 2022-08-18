@@ -1,4 +1,5 @@
 ﻿@using TravelBook.Web.Controllers
+@using TravelBook.Web.Service
 @using TravelBook.Web.ViewModels.PhotoAlbumViewModels;
 
 @model OpenPhotoAlbumViewModel
@@ -19,6 +20,14 @@
              if (cnt == numPhotos) break;
             <div class="column">
                 <img src="@Model.Photos[cnt].ImagePath" style="width:100%" onclick="openModal();currentSlide(@(cnt+1))" class="hover-shadow cursor">
+                <p style="margin: 0; text-align:center;">
+                @Html.ActionLink("Edit", nameof(PhotosController.Edit),
+                                 nameof(PhotosController).CutController(),
+                                 new { photoId=Model.Photos[cnt].Id }) |
+                @Html.ActionLink("Delete", nameof(PhotosController.Delete),
+                                 nameof(PhotosController).CutController(),
+                                 new { photoId=Model.Photos[cnt].Id })
+                </p>
             </div>
             cnt++;
         }
@@ -33,14 +42,16 @@
     {
         <div class="mySlides">
           <div class="numbertext">@(i+1) / @numPhotos</div>
-          <img src="@Model.Photos[i].ImagePath" style="width:100%">
+          <img src="@Model.Photos[i].ImagePath" style="width:100%" alt="@Model.Photos[i].Title">
+          <p hidden="hidden">@Model.Photos[i].Place</p>
         </div>        
     }
     <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
     <a class="next" onclick="plusSlides(1)">&#10095;</a>
 
     <div class="caption-container">
-      <p id="caption"></p>
+      <p id="title"></p>
+      <p id="place"></p>
     </div>
   </div>
 </div>

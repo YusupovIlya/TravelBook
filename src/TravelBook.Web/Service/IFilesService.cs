@@ -9,6 +9,7 @@ public interface IFilesService
     void CreateAlbumFolder(string UserId, int photoAlbumId);
     string GetAlbumFolderPath(string UserId, int photoAlbumId);
     void DeleteAlbumFolder(string UserId, int photoAlbumId);
+    void DeletePhoto(string relativePath);
     Task<Photo[]> UploadPhotos(IFormFileCollection images, string UserId, int photoAlbumId);
 
 }

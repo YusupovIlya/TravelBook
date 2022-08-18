@@ -3,10 +3,11 @@ public class Photo: Entity
 {
     public string ImagePath { get; set; } = string.Empty;
     public string? Title { get; set; }
-    public Place? Place { get; set; }
+    public string? Place { get; set; }
     public int PhotoAlbumId { get; set; }
     public PhotoAlbum? PhotoAlbum { get; set; }
 
+    public Photo(){}
     public Photo(string imagePath)
     {
         ImagePath = imagePath;

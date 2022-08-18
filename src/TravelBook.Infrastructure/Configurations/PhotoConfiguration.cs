@@ -12,8 +12,6 @@ public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
 
         builder.Ignore(b => b.DomainEvents);
 
-        builder.OwnsOne(o => o.Place);
-
         builder
             .HasOne(p => p.PhotoAlbum)
             .WithMany(pa => pa.Photos)

@@ -35,6 +35,17 @@ public class FilesService: IFilesService
             Directory.Delete(albumFolderPath, true);
     }
 
+    public void DeletePhoto(string relativePath)
+    {
+        relativePath = relativePath.Substring(1, relativePath.Length - 1);
+        relativePath = relativePath.Replace("/", "\\");
+        string fullPath = Path.Combine(_environment.WebRootPath, relativePath);
+        if (File.Exists(fullPath))
+            File.Delete(fullPath);
+        else
+            throw new FileNotFoundException();
+    }
+
     public string GetAlbumFolderPath(string UserId, int photoAlbumId)
     {
         string userFolderPath = GetUserFolderPath(UserId);

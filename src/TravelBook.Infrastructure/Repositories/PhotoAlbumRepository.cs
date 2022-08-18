@@ -31,12 +31,18 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         album.AddPhotos(photos);
         await _context.SaveChangesAsync();
     }
-    //public async Task RemovePhotosFromAlbum(int photoAlbumId, params Photo[] photos)
-    //{
-    //    PhotoAlbum album = await GetAlbumById(photoAlbumId);
-    //    album.RemovePhotos(photos);
-    //    await _context.SaveChangesAsync();
-    //}
+    public async Task UpdatePhoto(Photo photo)
+    {
+        _context.Entry(photo).State = EntityState.Deleted;
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task RemovePhotosFromAlbum(int photoAlbumId, params Photo[] photos)
+    {
+        (string ownerId, PhotoAlbum album) = await GetAlbumById(photoAlbumId);
+        album.RemovePhotos(photos);
+        await _context.SaveChangesAsync();
+    }
 
     public async Task<(string ownerId, PhotoAlbum album)> GetAlbumById(int photoAlbumId)
     {
@@ -67,5 +73,20 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         var ownerId = allTravelAlbums.First().Travel.UserId;
 
         return (ownerId, allTravelAlbums);
+    }
+
+    public async Task<(string ownerId, Photo photo)> GetPhotoById(int photoId)
+    {
+        var photo = await _context.Photos
+            .Include(p => p.PhotoAlbum)
+                .ThenInclude(pa => pa.Travel)
+            .FirstOrDefaultAsync(p => p.Id == photoId);
+
+        if (photo == null)
+            throw new NullReferenceException("Photo not found with this id.");
+
+        var ownerId = photo.PhotoAlbum.Travel.UserId;
+
+        return (ownerId, photo);
     }
 }

@@ -8,5 +8,7 @@ public interface IPhotoAlbumRepository
     Task<int> Add(PhotoAlbum photoAlbum);
     Task Delete(PhotoAlbum photoAlbum);
     Task AddPhotosToAlbum(PhotoAlbum album, params Photo[] photos);
-    //Task RemovePhotosFromAlbum(int photoAlbumId, params Photo[] photos);
+    Task<(string ownerId, Photo photo)> GetPhotoById(int photoId);
+    Task UpdatePhoto(Photo photo);
+    Task RemovePhotosFromAlbum(int photoAlbumId, params Photo[] photos);
 }

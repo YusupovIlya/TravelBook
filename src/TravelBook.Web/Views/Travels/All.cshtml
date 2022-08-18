@@ -1,4 +1,6 @@
 ﻿@using TravelBook.Web.Controllers
+@using TravelBook.Web.Service
+
 @model IEnumerable<TravelBook.Web.ViewModels.TravelViewModels.TravelViewModel>
 
 @{
@@ -28,8 +30,12 @@
                 @item.DateStartTravel.Value.ToShortDateString() - @item.DateFinishTravel.Value.ToShortDateString()
             </td>
             <td>
-                @Html.ActionLink("Articles", "TravelArticles", "Articles", new { travelId=item.Id }) |
-                @Html.ActionLink("Photoalbums", "TravelPhotoAlbums", "Photoalbums", new { travelId=item.Id }) |
+                @Html.ActionLink("Articles", nameof(ArticlesController.TravelArticles),
+                                 nameof(ArticlesController).CutController(),
+                                 new { travelId=item.Id }) |
+                @Html.ActionLink("Photoalbums", nameof(PhotoAlbumsController.TravelPhotoAlbums),
+                                 nameof(PhotoAlbumsController).CutController(),
+                                 new { travelId=item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new {  id=item.Id  }) |
             </td>
         </tr>

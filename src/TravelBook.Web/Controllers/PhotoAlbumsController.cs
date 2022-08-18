@@ -82,7 +82,8 @@ namespace TravelBook.Web.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> UploadPhotosToAlbum([FromForm] IFormFileCollection images, [FromForm] int photoAlbumId)
+        public async Task<IActionResult> UploadPhotosToAlbum([FromForm] IFormFileCollection images,
+                                                             [FromForm] int photoAlbumId)
         {
             try
             {
@@ -101,10 +102,11 @@ namespace TravelBook.Web.Controllers
                 return NotFound();
             }
         }
-        //// GET: PhotoAlbums
-        //public async Task<IActionResult> Index()
+        
+        //[HttpGet]
+        //public async Task<IActionResult> EditPhoto([FromQuery] int photoId)
         //{
-        //    var appDbContext = _context.PhotoAlbums.Include(p => p.Travel);
+        //    Photo photo = await _photoAlbumRepository.GetPhotoById(photoId);
         //    return View(await appDbContext.ToListAsync());
         //}
 
