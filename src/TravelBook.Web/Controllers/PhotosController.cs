@@ -15,12 +15,10 @@ namespace TravelBook.Web.Controllers
     {
         private readonly ILogger<TravelController> _logger;
         private readonly IPhotoAlbumRepository _photoAlbumRepository;
-        private readonly IFilesService _filesService;
         private readonly IMediator _mediator;
         public PhotosController(UserManager<IdentityUser> userManager,
                                 ILogger<TravelController> logger,
                                 IMapper mapper,
-                                IFilesService filesService,
                                 IMediator mediator,
                                 IPhotoAlbumRepository photoAlbumRepository)
                                 : base(userManager, mapper)
@@ -28,7 +26,6 @@ namespace TravelBook.Web.Controllers
             _logger = logger;
             _photoAlbumRepository = photoAlbumRepository;
             _mediator = mediator;
-            _filesService = filesService;
         }
 
 
@@ -72,9 +69,9 @@ namespace TravelBook.Web.Controllers
 
                 if (CheckAccessByUserId(ownerId))
                 {
-                    await _photoAlbumRepository.RemovePhotosFromAlbum(photo.PhotoAlbumId, photo);
-
                     await _mediator.Publish(new PhotoDeletedDomainEvent(photo));
+
+                    await _photoAlbumRepository.RemovePhotosFromAlbum(photo.PhotoAlbumId, photo);
 
                     return RedirectToAction(nameof(PhotoAlbumsController.Open),
                         nameof(PhotoAlbumsController).CutController(),

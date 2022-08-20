@@ -16,7 +16,7 @@ public class PhotoDeletedDomainEventHandler : INotificationHandler<PhotoDeletedD
     }
     public Task Handle(PhotoDeletedDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogTrace($"Photo - {notification.Photo.Title})" +
+        _logger.LogInformation($"Photo - {notification.Photo.Title})" +
                          $" was deleted by user with id:{notification.UserId}");
 
         _filesService.DeletePhoto(notification.Photo.ImagePath);

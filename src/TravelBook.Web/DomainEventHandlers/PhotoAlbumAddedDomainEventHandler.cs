@@ -16,8 +16,7 @@ public class PhotoAlbumAddedDomainEventHandler : INotificationHandler<PhotoAlbum
     }
     public Task Handle(PhotoAlbumAddedDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogTrace($"New album - (Travel: {notification.Travel.Place.ToString()}," +
-                         $" Title: {notification.PhotoAlbum.Title})" +
+        _logger.LogInformation($"New album - Title: {notification.PhotoAlbum.Title})" +
                          $" was added by user with id:{notification.UserId}");
 
         _filesService.CreateAlbumFolder(notification.UserId, notification.PhotoAlbum.Id);

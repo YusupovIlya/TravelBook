@@ -5,7 +5,7 @@ public interface IPhotoAlbumRepository
 {
     Task<(string ownerId, PhotoAlbum[] albums)> GetTravelPhotoAlbums(int travelId);
     Task<(string ownerId, PhotoAlbum album)> GetAlbumById(int photoAlbumId);
-    Task<int> Add(PhotoAlbum photoAlbum);
+    Task Add(PhotoAlbum photoAlbum);
     Task Delete(PhotoAlbum photoAlbum);
     Task AddPhotosToAlbum(PhotoAlbum album, params Photo[] photos);
     Task<(string ownerId, Photo photo)> GetPhotoById(int photoId);

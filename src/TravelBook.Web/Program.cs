@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using MediatR;
 using System.Reflection;
+using TravelBook.Web.Service.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(AppDbContext))));
-builder.Services.AddTransient<ITravelRepository, TravelRepository>();
-builder.Services.AddTransient<IPhotoAlbumRepository, PhotoAlbumRepository>();
+builder.Services.AddScoped<ITravelRepository, TravelRepository>();
+builder.Services.AddScoped<IPhotoAlbumRepository, PhotoAlbumRepository>();
 builder.Services.AddScoped<IFilesService, FilesService>();
 
 
@@ -38,15 +39,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-builder.Services.AddAuthorization(p =>
-{
-    p.AddPolicy("AdminArea", policy => { policy.RequireRole("admin"); });
-});
+builder.Services.AddAuthorization();
 
-builder.Services.AddControllersWithViews(a =>
-{
-    a.Conventions.Add(new AdminAreaAuthorization("Admin", "AdminArea"));
-});
+builder.Services.AddControllersWithViews();
 
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
@@ -64,16 +59,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+//app.UseStatusCodePagesWithReExecute("/error/{0}");
+
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
-
-
+app.UseStatusCodePagesWithReExecute("/error/{0}");
+//app.UseMiddleware<NotFoundMiddleware>();
 app.UseRouting();
 
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.UseEndpoints(endpoints =>
 {

@@ -2,10 +2,9 @@
 
 public class PhotoAlbumAddedDomainEvent: PhotoAlbumStateChanged
 {
-    public PhotoAlbumAddedDomainEvent(PhotoAlbum album)
+    public PhotoAlbumAddedDomainEvent(PhotoAlbum album, string userId)
     {
         PhotoAlbum = album;
-        Travel = album.Travel;
-        UserId = album.Travel.UserId;
+        UserId = userId;
     }
 }

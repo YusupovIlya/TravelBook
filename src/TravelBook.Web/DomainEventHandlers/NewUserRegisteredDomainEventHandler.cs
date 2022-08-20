@@ -16,7 +16,7 @@ public class NewUserRegisteredDomainEventHandler : INotificationHandler<NewUserR
     }
     public Task Handle(NewUserRegisteredDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogTrace($"New user ({notification.UserName}, {notification.UserId})" +
+        _logger.LogInformation($"New user ({notification.UserName}, {notification.UserId})" +
                          $" was successfully registered ");
 
         _filesService.CreateUserFolder(notification.UserId);

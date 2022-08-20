@@ -1,5 +1,4 @@
-﻿@using TravelBook.Web.Controllers
-@using TravelBook.Web.ViewModels.PhotoAlbumViewModels;
+﻿@using TravelBook.Web.ViewModels.PhotoAlbumViewModels
 
 @model IEnumerable<PhotoAlbumViewModel>
 
@@ -8,38 +7,52 @@
 }
 
 
-
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Travel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumPhotos)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>@item.Travel</td>
-            <td>@item.Title</td>
-            <td>@item.NumPhotos pcs.</td>
-            <td>
-                @Html.ActionLink("Open", "Open", "PhotoAlbums", new { photoAlbumId=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new {  photoAlbumId=item.Id, returnUrl=ViewBag.returnUrl  })
-            </td>
-        </tr>
+@if(ViewBag.IsEmpty)
+{
+    <label>You don't have any albums yet</label>
 }
-    </tbody>
-</table>
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Travel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumPhotos)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>@item.Travel</td>
+                <td>@item.Title</td>
+                <td>@item.NumPhotos pcs.</td>
+                <td>
+                    @Html.ActionLink("Open", nameof(PhotoAlbumsController.Open),
+                                             nameof(PhotoAlbumsController).CutController(),
+                                             new { photoAlbumId=item.Id, returnUrl=ViewBag.returnUrl }) |
+                    @Html.ActionLink("Delete", nameof(PhotoAlbumsController.Delete),
+                                               nameof(PhotoAlbumsController).CutController(),
+                                               new { photoAlbumId=item.Id, returnUrl=ViewBag.returnUrl })
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+}
 
-<form asp-action="Create" asp-controller="PhotoAlbums" method="get">
-    <input type="submit" value="Add new photoalbum" />
-</form>
+@if(ViewBag.TravelId != null)
+{
+    <form asp-action="Create" asp-controller="PhotoAlbums" method="get">
+        <input hidden="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+        <input hidden="hidden" name="travelId" value="@ViewBag.TravelId" />
+        <input type="submit" value="Add new photoalbum" />
+    </form>
+}

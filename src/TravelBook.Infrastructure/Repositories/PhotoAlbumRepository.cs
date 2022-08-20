@@ -13,11 +13,10 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         _context = context;
     }
 
-    public async Task<int> Add(PhotoAlbum photoAlbum)
+    public async Task Add(PhotoAlbum photoAlbum)
     {
         await _context.PhotoAlbums.AddAsync(photoAlbum);
         await _context.SaveChangesAsync();
-        return photoAlbum.Id;
     }
 
     public async Task Delete(PhotoAlbum photoAlbum)
@@ -33,7 +32,7 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
     }
     public async Task UpdatePhoto(Photo photo)
     {
-        _context.Entry(photo).State = EntityState.Deleted;
+        _context.Entry(photo).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
 

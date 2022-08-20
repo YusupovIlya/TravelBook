@@ -16,7 +16,7 @@ public class PhotoAlbumDeletedDomainEventHandler : INotificationHandler<PhotoAlb
     }
     public Task Handle(PhotoAlbumDeletedDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogTrace($"Album - (Travel: {notification.Travel.Place.ToString()}," +
+        _logger.LogInformation($"Album - (Travel: {notification.Travel.Place.ToString()}," +
                          $" Title: {notification.PhotoAlbum.Title})" +
                          $" was deleted by user with id:{notification.UserId}");
 
