@@ -88,4 +88,19 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
 
         return (ownerId, photo);
     }
+
+    public async Task<PhotoAlbum[]> GetAllPhotoAlbumsForUser(string userId)
+    {
+        var allAlbumsForUser = await _context.PhotoAlbums
+            .Include(p => p.Travel)
+            .Include(p => p.Photos)
+            .Where(p => p.Travel.UserId == userId)
+            .AsNoTracking()
+            .ToArrayAsync();
+
+        if (allAlbumsForUser.Length == 0)
+            throw new ArgumentNullException("This user doesn't have photoalbums.");
+
+        return allAlbumsForUser;
+    }
 }

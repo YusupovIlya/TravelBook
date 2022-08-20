@@ -9,10 +9,10 @@ namespace TravelBook.Web.Controllers
 {
     public class ArticlesController : BaseController
     {
-        private readonly ILogger<TravelController> _logger;
+        private readonly ILogger<ArticlesController> _logger;
         private readonly ITravelRepository _travelRepository;
         public ArticlesController(UserManager<IdentityUser> userManager,
-                                  ILogger<TravelController> logger,
+                                  ILogger<ArticlesController> logger,
                                   IMapper mapper,
                                   ITravelRepository travelRepository)
                                   : base(userManager, mapper)

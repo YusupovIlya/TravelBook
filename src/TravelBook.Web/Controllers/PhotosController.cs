@@ -13,11 +13,11 @@ namespace TravelBook.Web.Controllers
     [Authorize]
     public class PhotosController : BaseController
     {
-        private readonly ILogger<TravelController> _logger;
+        private readonly ILogger<PhotosController> _logger;
         private readonly IPhotoAlbumRepository _photoAlbumRepository;
         private readonly IMediator _mediator;
         public PhotosController(UserManager<IdentityUser> userManager,
-                                ILogger<TravelController> logger,
+                                ILogger<PhotosController> logger,
                                 IMapper mapper,
                                 IMediator mediator,
                                 IPhotoAlbumRepository photoAlbumRepository)

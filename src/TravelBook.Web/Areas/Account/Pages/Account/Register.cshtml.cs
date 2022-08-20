@@ -103,6 +103,7 @@ namespace TravelBook.Web.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+            List<AuthenticationScheme> t = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 

@@ -35,7 +35,8 @@
                     <a id="forgot-password" >Forgot your password?</a>
                 </p>
                 <p>
-                    <a>Register as a new user</a>
+                    @Html.ActionLink("Register as a new user", nameof(AccountController.Register),
+                                                               nameof(AccountController).CutController())
                 </p>
             </div>
         </section>

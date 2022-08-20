@@ -28,6 +28,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(opts =>
     opts.Password.RequireLowercase = false;
     opts.Password.RequireUppercase = false;
     opts.Password.RequireDigit = false;
+    opts.SignIn.RequireConfirmedAccount = false;
+    opts.SignIn.RequireConfirmedPhoneNumber = false;
+    opts.SignIn.RequireConfirmedEmail = false;
 }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -76,7 +79,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute("admin", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
     //endpoints.MapControllerRoute("default", "{controller=PhotoAlbums}/{action=UploadPhotosToAlbum}/{id=1}");
-    endpoints.MapControllerRoute("default", "{controller=Account}/{action=Login}/{id?}");
+    endpoints.MapControllerRoute("default", "{controller=Account}/{action=Register}/{id?}");
 });
 
 app.Run();

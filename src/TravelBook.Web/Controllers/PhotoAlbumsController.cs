@@ -9,12 +9,12 @@ namespace TravelBook.Web.Controllers
 {
     public class PhotoAlbumsController : BaseController
     {
-        private readonly ILogger<TravelController> _logger;
+        private readonly ILogger<PhotoAlbumsController> _logger;
         private readonly IPhotoAlbumRepository _photoAlbumRepository;
         private readonly IFilesService _filesService;
         private readonly IMediator _mediator;
         public PhotoAlbumsController(UserManager<IdentityUser> userManager,
-                                     ILogger<TravelController> logger,
+                                     ILogger<PhotoAlbumsController> logger,
                                      IMapper mapper,
                                      IPhotoAlbumRepository photoAlbumRepository,
                                      IFilesService filesService,
@@ -72,6 +72,25 @@ namespace TravelBook.Web.Controllers
                 return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml");
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> All()
+        {
+            ViewBag.returnUrl = $"{Request.Path}{Request.QueryString}";
+            try
+            {
+                ViewBag.IsEmpty = false;
+                var photoAlbums = await _photoAlbumRepository.GetAllPhotoAlbumsForUser(UserId);
+                var photoAlbumsModel = _mapper.Map<IEnumerable<PhotoAlbumViewModel>>(photoAlbums);
+                return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml", photoAlbumsModel);
+            }
+            catch (ArgumentNullException)
+            {
+                ViewBag.IsEmpty = true;
+                return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml");
+            }
+        }
+
 
         [HttpGet]
         public IActionResult UploadPhotosToAlbum(int photoAlbumId)

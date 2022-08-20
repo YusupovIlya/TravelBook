@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using TravelBook.Web.ViewModels.AccountViewModels;
+using TravelBook.Core.Events;
 
 namespace TravelBook.Web.Controllers
 {
@@ -10,15 +11,61 @@ namespace TravelBook.Web.Controllers
     public class AccountController : BaseController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IUserStore<IdentityUser> _userStore;
+        private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<AccountController> _logger;
-        public AccountController(UserManager<IdentityUser> userManager,
-                                 SignInManager<IdentityUser> signInManager,
-                                 ILogger<AccountController> logger,
-                                 IMapper mapper)
-                                 : base(userManager, mapper)
+        private readonly IMediator _mediator;
+
+        public AccountController(
+            UserManager<IdentityUser> userManager,
+            IUserStore<IdentityUser> userStore,
+            SignInManager<IdentityUser> signInManager,
+            ILogger<AccountController> logger,
+            IMapper mapper,
+            IMediator mediator) : base(userManager, mapper)
         {
+            _userStore = userStore;
+            _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
+            _mediator = mediator;
+        }
+
+
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
+            if (_signInManager.IsSignedIn(User))
+                return RedirectToAction("AboutMe");
+            else
+                return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = CreateUser();
+
+                await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+
+                    await _mediator.Publish(new NewUserRegisteredDomainEvent(user.Id, user.UserName));
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction(nameof(AboutMe));
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            return View(model);
         }
 
         [AllowAnonymous]
@@ -27,9 +74,7 @@ namespace TravelBook.Web.Controllers
             if (_signInManager.IsSignedIn(User))
                 return RedirectToAction("AboutMe");
             else
-            {
                 return View();
-            }
         }
 
         [HttpPost]
@@ -74,6 +119,28 @@ namespace TravelBook.Web.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
+        }
+
+        private IdentityUser CreateUser()
+        {
+            try
+            {
+                return Activator.CreateInstance<IdentityUser>();
+            }
+            catch
+            {
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
+                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
+            }
+        }
+        private IUserEmailStore<IdentityUser> GetEmailStore()
+        {
+            if (!_userManager.SupportsUserEmail)
+            {
+                throw new NotSupportedException("The default UI requires a user store with email support.");
+            }
+            return (IUserEmailStore<IdentityUser>)_userStore;
         }
     }
 }
