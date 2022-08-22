@@ -2,10 +2,13 @@
 
 public interface ITravelRepository
 {
-    Task<Travel[]> GetAllTravelForUser(string userId);
-    Task<Travel> GetTravelById(int travelId);
+    Task<Travel[]> GetAllUserTravels(string userId);
+    Task<(string ownerId, Travel)> GetTravelById(int travelId);
     Task<(string ownerId, Article)> GetArticleById(int articleId);
     Task<(string ownerId, Article[])> GetArticlesByTravelId(int travelId);
-    Task<int> Add(Travel travel);
-    Task<bool> Delete(int travelId);
+    Task Add(Travel travel);
+    Task Delete(Travel travel);
+    Task AddArticle(Article article);
+    Task EditArticle(Article article);
+    Task RemoveArticle(Article article);
 }

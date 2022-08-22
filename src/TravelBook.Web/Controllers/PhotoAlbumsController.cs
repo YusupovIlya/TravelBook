@@ -12,19 +12,17 @@ namespace TravelBook.Web.Controllers
         private readonly ILogger<PhotoAlbumsController> _logger;
         private readonly IPhotoAlbumRepository _photoAlbumRepository;
         private readonly IFilesService _filesService;
-        private readonly IMediator _mediator;
         public PhotoAlbumsController(UserManager<IdentityUser> userManager,
                                      ILogger<PhotoAlbumsController> logger,
                                      IMapper mapper,
                                      IPhotoAlbumRepository photoAlbumRepository,
                                      IFilesService filesService,
                                      IMediator mediator)
-                                     : base(userManager, mapper)
+                                     : base(userManager, mapper, mediator)
         {
             _logger = logger;
             _photoAlbumRepository = photoAlbumRepository;
             _filesService = filesService;
-            _mediator = mediator;
         }
 
         [HttpGet]
@@ -80,7 +78,7 @@ namespace TravelBook.Web.Controllers
             try
             {
                 ViewBag.IsEmpty = false;
-                var photoAlbums = await _photoAlbumRepository.GetAllPhotoAlbumsForUser(UserId);
+                var photoAlbums = await _photoAlbumRepository.GetAllUserPhotoAlbums(UserId);
                 var photoAlbumsModel = _mapper.Map<IEnumerable<PhotoAlbumViewModel>>(photoAlbums);
                 return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml", photoAlbumsModel);
             }

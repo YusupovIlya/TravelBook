@@ -12,24 +12,37 @@ public class TravelRepository : ITravelRepository
         _context = context;
     }
 
-    public async Task<int> Add(Travel travel)
+    public async Task Add(Travel travel)
     {
         await _context.Travels.AddAsync(travel);
         await _context.SaveChangesAsync();
-        return travel.Id;
     }
 
-    public async Task<bool> Delete(int travelId)
+    public async Task AddArticle(Article article)
     {
-        bool res;
-        Travel? travel = await GetTravelById(travelId);
-        _context.Travels.Remove(travel);
-        res = true;
+        await _context.Articles.AddAsync(article);
         await _context.SaveChangesAsync();
-        return res;
     }
 
-    public async Task<Travel[]> GetAllTravelForUser(string userId)
+    public async Task Delete(Travel travel)
+    {
+        _context.Travels.Remove(travel);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task RemoveArticle(Article article)
+    {
+        _context.Articles.Remove(article);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task EditArticle(Article article)
+    {
+        _context.Entry(article).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<Travel[]> GetAllUserTravels(string userId)
     {
         var allTravelForUser = await _context.Travels
             .Where(t => t.UserId == userId)
@@ -66,16 +79,19 @@ public class TravelRepository : ITravelRepository
         return (ownerId, articles);
     }
 
-    public async Task<Travel> GetTravelById(int travelId)
+    public async Task<(string ownerId, Travel)> GetTravelById(int travelId)
     {
         var travel = await _context.Travels
             .Include(t => t.Articles)
             .Include(t => t.PhotoAlbums)
                 .ThenInclude(pa => pa.Photos)
             .FirstOrDefaultAsync(t => t.Id == travelId);
+
         if (travel == null)
             throw new NullReferenceException("Travel not found with this id.");
-        else
-            return travel;
+
+        var ownerId = travel.UserId;
+
+        return (ownerId, travel);
     }
 }

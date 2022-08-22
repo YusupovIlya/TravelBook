@@ -1,21 +1,26 @@
-﻿@model TravelBook.Core.ProjectAggregate.Travel
+﻿@model TravelBook.Web.ViewModels.TravelViewModels.NewTravelViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewBag.Title = "Add new travel";
 }
 
-<h1>Create</h1>
-
-<h4>Travel</h4>
+<h2>New travel</h2>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" asp-controller="Travels" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input name="UserId" value="@ViewData["userId"]" hidden="hidden" readonly/>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
+                <label asp-for="Country" class="control-label"></label>
+                <input asp-for="Country" class="form-control" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateStartTravel" class="control-label"></label>
@@ -27,15 +32,16 @@
                 <input asp-for="DateFinishTravel" class="form-control" />
                 <span asp-validation-for="DateFinishTravel" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div style="margin-top:10px;">
+                <button type="submit">Add travel</button>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Back to travels", nameof(TravelsController.All),
+                        nameof(TravelsController).CutController())
 </div>
 
 @section Scripts {

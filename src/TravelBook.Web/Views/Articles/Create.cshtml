@@ -1,42 +1,48 @@
-﻿@model TravelBook.Core.ProjectAggregate.Article
+﻿@model TravelBook.Web.ViewModels.ArticleViewModels.NewArticleViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewBag.Title = "New article";
 }
 
-<h1>Create</h1>
-
-<h4>Article</h4>
+<h2>New article</h2>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" asp-controller="Articles" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom:20px;">
+                <input hidden="hidden" name="TravelId" value="@ViewBag.TravelId" />
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Text" class="control-label"></label>
-                <input asp-for="Text" class="form-control" />
-                <span asp-validation-for="Text" class="text-danger"></span>
+            <div class="form-group" id="editor">
+                <textarea asp-for="Text" class="form-control"></textarea>
             </div>
-            <div class="form-group">
-                <label asp-for="TravelId" class="control-label"></label>
-                <select asp-for="TravelId" class ="form-control" asp-items="ViewBag.TravelId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div style="margin-top:10px;">
+                <button type="submit">Create</button>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Back to articles", nameof(ArticlesController.TravelArticles),
+                                         nameof(ArticlesController).CutController(),
+                                         new { travelId=ViewBag.TravelId })
 </div>
 
 @section Scripts {
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+    <script>
+        window.onload = function() {
+            ClassicEditor
+                .create( document.querySelector("#@Html.IdFor(m => m.Text)") )
+                .catch( error => {
+                    console.error( error );
+                } );
+        }
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

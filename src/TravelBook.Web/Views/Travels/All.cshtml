@@ -36,13 +36,15 @@
                 @Html.ActionLink("Photoalbums", nameof(PhotoAlbumsController.TravelPhotoAlbums),
                                  nameof(PhotoAlbumsController).CutController(),
                                  new { travelId=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new {  id=item.Id  }) |
+                @Html.ActionLink("Delete", nameof(TravelsController.Delete),
+                                 nameof(TravelsController).CutController(),
+                                 new { travelId=item.Id })
             </td>
         </tr>
 }
     </tbody>
 </table>
 
-<form asp-action="Create" asp-controller="Travel" method="get">
+<form asp-action="Create" asp-controller="Travels" method="get">
     <input type="submit" value="Add new travel" />
 </form>

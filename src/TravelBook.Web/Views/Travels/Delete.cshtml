@@ -1,39 +1,40 @@
-﻿@model TravelBook.Core.ProjectAggregate.Travel
+﻿@using TravelBook.Web.ViewModels.TravelViewModels
+
+@model TravelDeleteViewModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewBag.Title = "Delete travel";
 }
 
-<h1>Delete</h1>
+<h2>Are you sure you want to delete all travel data?</h2>
+<hr />
 
-<h3>Are you sure you want to delete this?</h3>
+<div class="col-md-4">
+    <p>
+        @Html.DisplayNameFor(model => model.Place)
+        @Html.DisplayFor(model => model.Place)
+    </p>
+    <p>
+        Period: @Model.DateStartTravel.Value.ToShortDateString() - @Model.DateFinishTravel.Value.ToShortDateString()
+    </p>
+    <p>
+        @Html.DisplayNameFor(model => model.NumAlbums)
+        @Html.DisplayFor(model => model.NumAlbums) pcs.
+    </p>
+    <p>
+        @Html.DisplayNameFor(model => model.NumArticles)
+        @Html.DisplayFor(model => model.NumArticles) pcs.
+    </p>
+</div>
 <div>
-    <h4>Travel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateStartTravel)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateStartTravel)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateFinishTravel)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateFinishTravel)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+    <p>
+        <form asp-action="Delete" asp-controller="Travels" method="post">
+            <input type="hidden" name="travelId" value="@Model.Id" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </form>
+    </p>
+    <p>
+        @Html.ActionLink("Back to travels", nameof(TravelsController.All),
+                            nameof(TravelsController).CutController())
+    </p>
 </div>

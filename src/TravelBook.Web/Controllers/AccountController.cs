@@ -14,21 +14,19 @@ namespace TravelBook.Web.Controllers
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<AccountController> _logger;
-        private readonly IMediator _mediator;
 
-        public AccountController(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
-            ILogger<AccountController> logger,
-            IMapper mapper,
-            IMediator mediator) : base(userManager, mapper)
+        public AccountController(UserManager<IdentityUser> userManager,
+                                 IUserStore<IdentityUser> userStore,
+                                 SignInManager<IdentityUser> signInManager,
+                                 ILogger<AccountController> logger,
+                                 IMapper mapper,
+                                 IMediator mediator)
+                                 : base(userManager, mapper, mediator)
         {
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-            _mediator = mediator;
         }
 
 

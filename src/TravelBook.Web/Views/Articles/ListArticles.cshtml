@@ -6,17 +6,36 @@
     ViewBag.Title = "Travel articles";
 }
 
-@foreach(ArticleViewModel item in Model){
-	<article class="box post post-excerpt">
-		<header>
-			<h2><a href="#">@item.Title</a></h2>
-			<p>Travel place: @item.Place</p>
-		</header>
-		<p>
-			@item.Text.Substring(0, 480)		
-		</p>
-		<p>
-			@Html.ActionLink("Show more...", "FullArticle", "Articles", new { articleId=item.Id })
-		</p>
-	</article>
+@if(ViewBag.IsEmpty)
+{
+    <label>You don't have any articles yet</label>
+}
+else{
+	@foreach(ArticleViewModel item in Model){
+		<article class="box post post-excerpt">
+			<header>
+				<h2><a href="#">@item.Title</a></h2>
+				<p>Travel place: @item.Place</p>
+			</header>
+			<p>
+				@Html.Raw(item.Text)	
+			</p>
+            <p style="margin: 0; text-align:left;">
+				@Html.ActionLink("Edit", nameof(ArticlesController.Edit),
+										 nameof(ArticlesController).CutController(),
+										 new { articleId=item.Id }) | 
+				@Html.ActionLink("Delete", nameof(ArticlesController.Delete),
+										   nameof(ArticlesController).CutController(),
+										   new { articleId=item.Id })
+            </p>
+		</article>
+	}
+}
+
+@if(ViewBag.TravelId != null)
+{
+    <form asp-action="Create" asp-controller="Articles" method="get">
+        <input hidden="hidden" name="travelId" value="@ViewBag.TravelId" />
+        <input type="submit" value="Add new article" />
+    </form>
 }

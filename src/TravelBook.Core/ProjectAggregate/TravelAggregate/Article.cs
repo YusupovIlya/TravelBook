@@ -7,6 +7,8 @@ public class Article: Entity
     public int TravelId { get; set; }
     public Travel? Travel { get; set; }
 
+    public Article(){}
+
     public Article(string title, string text, int travelId)
     {
         Title = title;

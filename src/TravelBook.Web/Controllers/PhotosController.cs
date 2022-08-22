@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TravelBook.Core.ProjectAggregate;
 using TravelBook.Core.Events;
 using TravelBook.Web.ViewModels.PhotoAlbumViewModels;
-using TravelBook.Web.Service;
 using Microsoft.AspNetCore.Authorization;
-using MediatR;
 
 namespace TravelBook.Web.Controllers
 {
@@ -15,17 +13,15 @@ namespace TravelBook.Web.Controllers
     {
         private readonly ILogger<PhotosController> _logger;
         private readonly IPhotoAlbumRepository _photoAlbumRepository;
-        private readonly IMediator _mediator;
         public PhotosController(UserManager<IdentityUser> userManager,
                                 ILogger<PhotosController> logger,
                                 IMapper mapper,
                                 IMediator mediator,
                                 IPhotoAlbumRepository photoAlbumRepository)
-                                : base(userManager, mapper)
+                                : base(userManager, mapper, mediator)
         {
             _logger = logger;
             _photoAlbumRepository = photoAlbumRepository;
-            _mediator = mediator;
         }
 
 
@@ -54,7 +50,7 @@ namespace TravelBook.Web.Controllers
         public async Task<IActionResult> Edit([FromForm] EditPhotoViewModel model)
         {
             Photo updatedPhoto = _mapper.Map<Photo>(model);
-            await _photoAlbumRepository.UpdatePhoto(updatedPhoto);
+            await _photoAlbumRepository.EditPhoto(updatedPhoto);
             return RedirectToAction(nameof(PhotoAlbumsController.Open),
                                     nameof(PhotoAlbumsController).CutController(),
                                     new { photoAlbumId = model.PhotoAlbumId });

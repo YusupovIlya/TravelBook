@@ -30,7 +30,7 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         album.AddPhotos(photos);
         await _context.SaveChangesAsync();
     }
-    public async Task UpdatePhoto(Photo photo)
+    public async Task EditPhoto(Photo photo)
     {
         _context.Entry(photo).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -63,6 +63,7 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         var allTravelAlbums = await _context.PhotoAlbums
             .Include(pa => pa.Photos)
             .Include(pa => pa.Travel)
+            .Where(pa => pa.TravelId == travelId)
             .AsNoTracking()
             .ToArrayAsync();
 
@@ -89,7 +90,7 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         return (ownerId, photo);
     }
 
-    public async Task<PhotoAlbum[]> GetAllPhotoAlbumsForUser(string userId)
+    public async Task<PhotoAlbum[]> GetAllUserPhotoAlbums(string userId)
     {
         var allAlbumsForUser = await _context.PhotoAlbums
             .Include(p => p.Travel)
