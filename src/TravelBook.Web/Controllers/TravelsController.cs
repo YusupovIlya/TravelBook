@@ -52,42 +52,35 @@ namespace TravelBook.Web.Controllers
 
         public async Task<IActionResult> Delete([FromQuery] int travelId)
         {
-            try
-            {
-                (string ownerId, Travel travel) = await _travelRepository.GetTravelById(travelId);
-                if (CheckAccessByUserId(ownerId))
-                {
-                    var travelModel = _mapper.Map<TravelDeleteViewModel>(travel);
-                    return View(travelModel);
-                }
-                else
-                    return Forbid();
-            }
-            catch (NullReferenceException)
-            {
-                return NotFound();
-            }
+            return await ControllerAction<int, Travel, NullReferenceException>(
+
+                    travelId,
+
+                    async (id) => await _travelRepository.GetTravelById(id),
+
+                    (Travel travel) =>
+                    {
+                        var travelModel = _mapper.Map<TravelDeleteViewModel>(travel);
+                        return View(travelModel);
+                    });
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed([FromForm] int travelId)
         {
-            try
-            {
-                (string ownerId, Travel travel) = await _travelRepository.GetTravelById(travelId);
-                if (CheckAccessByUserId(ownerId))
-                {
-                    await _travelRepository.Delete(travel);
-                    return RedirectToAction(nameof(All));
-                }
-                else
-                    return Forbid();
-            }
-            catch (ArgumentNullException)
-            {
-                return NotFound();
-            }
+
+            return await ControllerAction<int, Travel, NullReferenceException>(
+
+                    travelId,
+
+                    async (id) => await _travelRepository.GetTravelById(id),
+
+                    async (Travel travel) =>
+                    {
+                        await _travelRepository.Delete(travel);
+                        return RedirectToAction(nameof(All));
+                    });
         }
     }
 }

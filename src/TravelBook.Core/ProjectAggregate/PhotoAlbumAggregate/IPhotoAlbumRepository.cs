@@ -3,7 +3,7 @@ namespace TravelBook.Core.ProjectAggregate;
 
 public interface IPhotoAlbumRepository
 {
-    Task<PhotoAlbum[]> GetAllUserPhotoAlbums(string userId);
+    Task<(string ownerId, PhotoAlbum[] albums)> GetAllUserPhotoAlbums(string userId);
     Task<(string ownerId, PhotoAlbum[] albums)> GetTravelPhotoAlbums(int travelId);
     Task<(string ownerId, PhotoAlbum album)> GetAlbumById(int photoAlbumId);
     Task Add(PhotoAlbum photoAlbum);

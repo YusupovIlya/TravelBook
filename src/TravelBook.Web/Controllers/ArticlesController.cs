@@ -24,7 +24,7 @@ namespace TravelBook.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> FullArticle([FromQuery] int articleId)
         {
-            return await ControllerAction<Article, NullReferenceException>(
+            return await ControllerAction<int, Article, NullReferenceException>(
 
                     articleId,
 
@@ -41,7 +41,7 @@ namespace TravelBook.Web.Controllers
         public async Task<IActionResult> TravelArticles([FromQuery] int travelId)
         {
             ViewBag.TravelId = travelId;
-            return await ControllerAction<Article, ArgumentNullException>(
+            return await ControllerAction<int, Article, ArgumentNullException>(
 
                     travelId,
 
@@ -85,7 +85,7 @@ namespace TravelBook.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit([FromQuery] int articleId)
         {
-            return await ControllerAction<Article, NullReferenceException>(
+            return await ControllerAction<int, Article, NullReferenceException>(
 
                     articleId,
 
@@ -114,7 +114,7 @@ namespace TravelBook.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete([FromQuery] int articleId)
         {
-            return await ControllerAction<Article, NullReferenceException>(
+            return await ControllerAction<int, Article, NullReferenceException>(
 
                     articleId,
 

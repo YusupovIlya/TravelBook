@@ -90,7 +90,7 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         return (ownerId, photo);
     }
 
-    public async Task<PhotoAlbum[]> GetAllUserPhotoAlbums(string userId)
+    public async Task<(string ownerId, PhotoAlbum[] albums)> GetAllUserPhotoAlbums(string userId)
     {
         var allAlbumsForUser = await _context.PhotoAlbums
             .Include(p => p.Travel)
@@ -102,6 +102,6 @@ public class PhotoAlbumRepository: IPhotoAlbumRepository
         if (allAlbumsForUser.Length == 0)
             throw new ArgumentNullException("This user doesn't have photoalbums.");
 
-        return allAlbumsForUser;
+        return (userId, allAlbumsForUser);
     }
 }

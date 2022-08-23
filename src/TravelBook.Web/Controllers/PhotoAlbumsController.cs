@@ -26,25 +26,23 @@ namespace TravelBook.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Open([FromQuery] int photoAlbumId, [FromQuery] string? returnUrl = null)
+        public async Task<IActionResult> Open([FromQuery] int photoAlbumId,
+                                              [FromQuery] string? returnUrl = null)
         {
             returnUrl ??= Url.Content("~/travels/all");
-            try
-            {
-                (string ownerId, PhotoAlbum album) = await _photoAlbumRepository.GetAlbumById(photoAlbumId);
-                if (CheckAccessByUserId(ownerId))
-                {
-                    ViewBag.returnUrl = returnUrl;
-                    var photoAlbumModel = _mapper.Map<OpenPhotoAlbumViewModel>(album);
-                    return View(photoAlbumModel);
-                }
-                else
-                    return Forbid();
-            }
-            catch (NullReferenceException)
-            {
-                return NotFound();
-            }
+
+            return await ControllerAction<int, PhotoAlbum, NullReferenceException>(
+
+                    photoAlbumId,
+
+                    async (id) => await _photoAlbumRepository.GetAlbumById(id),
+
+                    (PhotoAlbum album) =>
+                    {
+                        ViewBag.returnUrl = returnUrl;
+                        var photoAlbumModel = _mapper.Map<OpenPhotoAlbumViewModel>(album);
+                        return View(photoAlbumModel);
+                    });
         }
 
         [HttpGet]
@@ -52,71 +50,74 @@ namespace TravelBook.Web.Controllers
         {
             ViewBag.TravelId = travelId;
             ViewBag.returnUrl = $"{Request.Path}{Request.QueryString}";
-            try
-            {
-                (string ownerId, PhotoAlbum[] albums) = await _photoAlbumRepository.GetTravelPhotoAlbums(travelId);
-                if (CheckAccessByUserId(ownerId))
-                {
-                    ViewBag.IsEmpty = false;
-                    var photoAlbumsModel = _mapper.Map<IEnumerable<PhotoAlbumViewModel>>(albums);
-                    return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml", photoAlbumsModel);
-                }
-                else
-                    return Forbid();
-            }
-            catch (ArgumentNullException)
-            {
-                ViewBag.IsEmpty = true;
-                return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml");
-            }
+
+            return await ControllerAction<int, PhotoAlbum, ArgumentNullException>(
+
+                    travelId,
+
+                    async (id) => await _photoAlbumRepository.GetTravelPhotoAlbums(id),
+
+                    (PhotoAlbum[] albums) =>
+                    {
+                        ViewBag.IsEmpty = false;
+                        var photoAlbumsModel = _mapper.Map<IEnumerable<PhotoAlbumViewModel>>(albums);
+                        return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml", photoAlbumsModel);
+                    },
+
+                    () => {
+                        ViewBag.IsEmpty = true;
+                        return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml");
+                    });
         }
 
         [HttpGet]
         public async Task<IActionResult> All()
         {
             ViewBag.returnUrl = $"{Request.Path}{Request.QueryString}";
-            try
-            {
-                ViewBag.IsEmpty = false;
-                var photoAlbums = await _photoAlbumRepository.GetAllUserPhotoAlbums(UserId);
-                var photoAlbumsModel = _mapper.Map<IEnumerable<PhotoAlbumViewModel>>(photoAlbums);
-                return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml", photoAlbumsModel);
-            }
-            catch (ArgumentNullException)
-            {
-                ViewBag.IsEmpty = true;
-                return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml");
-            }
+            return await ControllerAction<string, PhotoAlbum, ArgumentNullException>(
+
+                    UserId,
+
+                    async (id) => await _photoAlbumRepository.GetAllUserPhotoAlbums(id),
+
+                    (PhotoAlbum[] albums) =>
+                    {
+                        ViewBag.IsEmpty = false;
+                        var photoAlbumsModel = _mapper.Map<IEnumerable<PhotoAlbumViewModel>>(albums);
+                        return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml", photoAlbumsModel);
+                    },
+
+                    () => {
+                        ViewBag.IsEmpty = true;
+                        return View("~/Views/PhotoAlbums/ListPhotoAlbums.cshtml");
+                    });
         }
 
 
         [HttpGet]
-        public IActionResult UploadPhotosToAlbum(int photoAlbumId)
+        public IActionResult UploadPhotosToAlbum([FromQuery] int photoAlbumId)
         {
             ViewData["photoAlbumId"] = photoAlbumId;
             return View();
         }
        
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadPhotosToAlbum([FromForm] IFormFileCollection images,
                                                              [FromForm] int photoAlbumId)
         {
-            try
-            {
-                (string ownerId, PhotoAlbum album) = await _photoAlbumRepository.GetAlbumById(photoAlbumId);
-                if (CheckAccessByUserId(ownerId))
-                {
-                    Photo[] uploadedPhotos = await _filesService.UploadPhotos(images, UserId, album.Id);
-                    await _photoAlbumRepository.AddPhotosToAlbum(album, uploadedPhotos);
-                    return RedirectToAction(nameof(Open), new { photoAlbumId = photoAlbumId });
-                }
-                else
-                    return Forbid();
-            }
-            catch (NullReferenceException)
-            {
-                return NotFound();
-            }
+            return await ControllerAction<int, PhotoAlbum, NullReferenceException>(
+
+                    photoAlbumId,
+
+                    async (id) => await _photoAlbumRepository.GetAlbumById(id),
+
+                    async (PhotoAlbum album) =>
+                    {
+                        Photo[] uploadedPhotos = await _filesService.UploadPhotos(images, UserId, album.Id);
+                        await _photoAlbumRepository.AddPhotosToAlbum(album, uploadedPhotos);
+                        return RedirectToAction(nameof(Open), new { photoAlbumId = photoAlbumId });
+                    });
         }
 
         [HttpGet]
@@ -141,22 +142,19 @@ namespace TravelBook.Web.Controllers
         public async Task<IActionResult> Delete(int photoAlbumId, string? returnUrl = null)
         {
             returnUrl ??= Url.Content("~/travels/all");
-            try
-            {
-                (string ownerId, PhotoAlbum album) = await _photoAlbumRepository.GetAlbumById(photoAlbumId);
-                if (CheckAccessByUserId(ownerId))
-                {
-                    ViewBag.returnUrl = returnUrl;
-                    var photoAlbumModel = _mapper.Map<PhotoAlbumViewModel>(album);
-                    return View(photoAlbumModel);
-                }
-                else
-                    return Forbid();
-            }
-            catch (ArgumentNullException)
-            {
-                return NotFound();
-            }
+
+            return await ControllerAction<int, PhotoAlbum, NullReferenceException>(
+
+                    photoAlbumId,
+
+                    async (id) => await _photoAlbumRepository.GetAlbumById(id),
+
+                    (PhotoAlbum album) =>
+                    {
+                        ViewBag.returnUrl = returnUrl;
+                        var photoAlbumModel = _mapper.Map<PhotoAlbumViewModel>(album);
+                        return View(photoAlbumModel);
+                    });
         }
 
 
@@ -164,22 +162,18 @@ namespace TravelBook.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int photoAlbumId, string returnUrl)
         {
-            try
-            {
-                (string ownerId, PhotoAlbum album) = await _photoAlbumRepository.GetAlbumById(photoAlbumId);
-                if (CheckAccessByUserId(ownerId))
-                {
-                    await _photoAlbumRepository.Delete(album);
-                    await _mediator.Publish(new PhotoAlbumDeletedDomainEvent(album));
-                    return LocalRedirect(returnUrl);
-                }
-                else
-                    return Forbid();
-            }
-            catch (ArgumentNullException)
-            {
-                return NotFound();
-            }
+            return await ControllerAction<int, PhotoAlbum, NullReferenceException>(
+
+                    photoAlbumId,
+
+                    async (id) => await _photoAlbumRepository.GetAlbumById(id),
+
+                    async (PhotoAlbum album) =>
+                    {
+                        await _photoAlbumRepository.Delete(album);
+                        await _mediator.Publish(new PhotoAlbumDeletedDomainEvent(album));
+                        return LocalRedirect(returnUrl);
+                    });
         }
 
     }

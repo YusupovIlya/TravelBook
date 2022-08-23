@@ -35,11 +35,11 @@ public class BaseController : Controller
     /// <param name="request">Actions for get data from repository</param>
     /// <param name="action">Actions if the user is the owner</param>
     /// <returns>Controller action</returns>
-    protected async Task<IActionResult> ControllerAction<T, E> (int id,
-                                                          Func<int, Task<(string ownerId, T obj)>> request,
-                                                          Func<T, IActionResult> action)
-                                                          where T: Entity
-                                                          where E: Exception
+    protected async Task<IActionResult> ControllerAction<D, T, E> (D id,
+                                                                  Func<D, Task<(string ownerId, T obj)>> request,
+                                                                  Func<T, IActionResult> action)
+                                                                  where T: Entity
+                                                                  where E: Exception
     {
         try
         {
@@ -57,35 +57,12 @@ public class BaseController : Controller
         }
     }
 
-    protected async Task<IActionResult> ControllerAction<T, E>(int id,
-                                                          Func<int, Task<(string ownerId, T[] obj)>> request,
-                                                          Func<T[], IActionResult> action)
-                                                          where T : Entity
-                                                          where E : Exception
-    {
-        try
-        {
-            (string ownerId, T[] obj) = await request(id);
-            if (CheckAccessByUserId(ownerId))
-            {
-                return action(obj);
-            }
-            else
-                return Forbid();
-        }
-        catch (E)
-        {
-            return NotFound();
-        }
-    }
-
-
-    protected async Task<IActionResult> ControllerAction<T, E>(int id,
-                                                               Func<int, Task<(string ownerId, T[] obj)>> request,
-                                                               Func<T[], IActionResult> action,
-                                                               Func<IActionResult> ifWasException)
-                                                               where T : Entity
-                                                               where E : Exception
+    protected async Task<IActionResult> ControllerAction<D, T, E>(D id,
+                                                                  Func<D, Task<(string ownerId, T[] obj)>> request,
+                                                                  Func<T[], IActionResult> action,
+                                                                  Func<IActionResult> ifWasException)
+                                                                  where T : Entity
+                                                                  where E : Exception
     {
         try
         {
@@ -103,11 +80,11 @@ public class BaseController : Controller
         }
     }
 
-    protected async Task<IActionResult> ControllerAction<T, E>(int id,
-                                                          Func<int, Task<(string ownerId, T obj)>> request,
-                                                          Func<T, Task<IActionResult>> action)
-                                                          where T : Entity
-                                                          where E : Exception
+    protected async Task<IActionResult> ControllerAction<D, T, E>(D id,
+                                                                  Func<D, Task<(string ownerId, T obj)>> request,
+                                                                  Func<T, Task<IActionResult>> action)
+                                                                  where T : Entity
+                                                                  where E : Exception
     {
         try
         {
@@ -122,29 +99,6 @@ public class BaseController : Controller
         catch (E)
         {
             return NotFound();
-        }
-    }
-
-    protected async Task<IActionResult> ControllerAction<T, E>(int id,
-                                                          Func<int, Task<(string ownerId, T obj)>> request,
-                                                          Func<T, IActionResult> action,
-                                                          Func<IActionResult> ifWasException)
-                                                          where T : Entity
-                                                          where E : Exception
-    {
-        try
-        {
-            (string ownerId, T obj) = await request(id);
-            if (CheckAccessByUserId(ownerId))
-            {
-                return action(obj);
-            }
-            else
-                return Forbid();
-        }
-        catch (E)
-        {
-            return ifWasException();
         }
     }
 }
