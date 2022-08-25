@@ -20,9 +20,25 @@ public class Photo: Entity
         PhotoAlbumId = photoAlbumId;
     }
 
-    public string GetAlbumName()
+    public override bool Equals(object? obj)
     {
-        string result = this.PhotoAlbum == null ? "Album isn't defined": PhotoAlbum.Title;
-        return result;
+        if (obj == null || !(obj is Photo))
+            return false;
+
+        if (Object.ReferenceEquals(this, obj))
+            return true;
+
+        if (this.GetType() != obj.GetType())
+            return false;
+
+        Photo item = (Photo)obj;
+
+        if (item.ImagePath == this.ImagePath &&
+           item.Place == this.Place &&
+           item.PhotoAlbumId == this.PhotoAlbumId &&
+           item.Title == this.Title)
+            return true;
+        else
+            return false;
     }
 }

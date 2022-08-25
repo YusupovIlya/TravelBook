@@ -10,8 +10,6 @@ public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
     {
         builder.HasKey(o => o.Id);
 
-        builder.Ignore(b => b.DomainEvents);
-
         builder
             .HasOne(p => p.PhotoAlbum)
             .WithMany(pa => pa.Photos)

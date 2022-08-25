@@ -15,12 +15,15 @@ public class ErrorController : Controller
     [Route("404")]
     public IActionResult PageNotFound()
     {
-        string? originalPath = "unknown";
-        if (HttpContext.Items.ContainsKey("originalPath"))
-        {
-            originalPath = HttpContext.Items["originalPath"] as string;
-        }
-        _logger.LogError($"Error PageNotFound: {originalPath}");
+        _logger.LogError($"Error PageNotFound");
+        return View();
+    }
+
+    [Route("403")]
+    public IActionResult PageAccessDenied()
+    {
+        Response.StatusCode = 403;
+        _logger.LogError($"Error PageAccessDenied");
         return View();
     }
 }

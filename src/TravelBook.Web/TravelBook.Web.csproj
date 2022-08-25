@@ -15,10 +15,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="Areas\Admin\Controllers\" />
-    <Folder Include="Areas\Admin\Views\" />
-    <Folder Include="Areas\User\Controllers\" />
-    <Folder Include="Areas\User\Views\" />
     <Folder Include="wwwroot\usersData\3b62472e-4f66-49fa-a20f-e7685b9565d8\" />
   </ItemGroup>
   

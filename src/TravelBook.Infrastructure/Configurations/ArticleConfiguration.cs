@@ -10,8 +10,6 @@ public class ArticleConfiguration : IEntityTypeConfiguration<Article>
     {
         builder.HasKey(o => o.Id);
 
-        builder.Ignore(b => b.DomainEvents);
-
         builder
             .HasOne(a => a.Travel)
             .WithMany(t => t.Articles)
