@@ -6,7 +6,7 @@ using TravelBook.Core.SeedWork;
 
 namespace TravelBook.Web.Controllers;
 
-
+[Authorize]
 public class BaseController : Controller
 {
     protected readonly UserManager<IdentityUser> _userManager;
@@ -25,16 +25,6 @@ public class BaseController : Controller
 
     protected bool CheckAccessByUserId(string ownerId) => UserId == ownerId;
 
-
-    /// <summary>
-    /// Controller action with checking access to data only for the owner 
-    /// </summary>
-    /// <typeparam name="T">Entity type in repository</typeparam>
-    /// <typeparam name="E">Exception type in repository</typeparam>
-    /// <param name="id">id for search in repository</param>
-    /// <param name="request">Actions for get data from repository</param>
-    /// <param name="action">Actions if the user is the owner</param>
-    /// <returns>Controller action</returns>
     protected async Task<IActionResult> ControllerAction<D, T, E> (D id,
                                                                   Func<D, Task<(string ownerId, T obj)>> request,
                                                                   Func<T, IActionResult> action)

@@ -52,7 +52,7 @@ public class TravelRepository : ITravelRepository
         return allTravelForUser;
     }
 
-    public async Task<(string ownerId, Article)> GetArticleById(int articleId)
+    public async Task<(string ownerId, Article article)> GetArticleById(int articleId)
     {
         var article = await _context.Articles
             .Include(a => a.Travel)
@@ -63,7 +63,7 @@ public class TravelRepository : ITravelRepository
         return (ownerId, article);
     }
 
-    public async Task<(string ownerId, Article[])> GetArticlesByTravelId(int travelId)
+    public async Task<(string ownerId, Article[] articles)> GetArticlesByTravelId(int travelId)
     {
         var articles = await _context.Articles
             .Include(a => a.Travel)
@@ -79,7 +79,7 @@ public class TravelRepository : ITravelRepository
         return (ownerId, articles);
     }
 
-    public async Task<(string ownerId, Travel)> GetTravelById(int travelId)
+    public async Task<(string ownerId, Travel travel)> GetTravelById(int travelId)
     {
         var travel = await _context.Travels
             .Include(t => t.Articles)
@@ -93,5 +93,19 @@ public class TravelRepository : ITravelRepository
         var ownerId = travel.UserId;
 
         return (ownerId, travel);
+    }
+
+    public async Task<(string ownerId, Article[] articles)> GetAllUserArticles(string userId)
+    {
+        var articles = await _context.Articles
+            .Include(a => a.Travel)
+            .Where(a => a.Travel.UserId == userId)
+            .AsNoTracking()
+            .ToArrayAsync();
+
+        if (articles.Length == 0)
+            throw new ArgumentNullException("Not found articles for this user");
+
+        return (userId, articles);
     }
 }

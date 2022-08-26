@@ -10,8 +10,6 @@ public class PhotoAlbumConfiguration : IEntityTypeConfiguration<PhotoAlbum>
     {
         builder.HasKey(o => o.Id);
 
-        builder.Ignore(b => b.DomainEvents);
-
         builder
             .HasOne(pa => pa.Travel)
             .WithMany(t => t.PhotoAlbums)
