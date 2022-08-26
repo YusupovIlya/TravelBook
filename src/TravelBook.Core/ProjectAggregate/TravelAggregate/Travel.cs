@@ -3,9 +3,9 @@
 public class Travel: Entity, IAggregateRoot
 {
     public string UserId { get; private set; }
-    public Place Place { get; private set; }
-    public DateTime? DateStartTravel { get; private set; }
-    public DateTime? DateFinishTravel { get; private set; }
+    public Place Place { get; set; }
+    public DateTime? DateStartTravel { get; set; }
+    public DateTime? DateFinishTravel { get; set; }
 
     private List<PhotoAlbum> _photoAlbums = new List<PhotoAlbum>();
     public IEnumerable<PhotoAlbum> PhotoAlbums => _photoAlbums.AsReadOnly();

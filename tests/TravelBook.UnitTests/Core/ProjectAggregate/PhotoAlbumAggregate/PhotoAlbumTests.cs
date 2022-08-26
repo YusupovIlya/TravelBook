@@ -1,7 +1,4 @@
-﻿using TravelBook.Core.ProjectAggregate;
-using Xunit;
-
-namespace TravelBook.UnitTests;
+﻿namespace TravelBook.UnitTests;
 
 public class PhotoAlbumTests
 {
@@ -10,7 +7,7 @@ public class PhotoAlbumTests
     private Photo[]? _testPhotos;
     private PhotoAlbum? _testPhotoalbum;
 
-    private PhotoAlbum CreateAlbum()
+    private PhotoAlbum CreateTestAlbum()
     {
         return new PhotoAlbum(_testName, _testTravelId);
     }
@@ -28,7 +25,7 @@ public class PhotoAlbumTests
     public void InitializesTitle()
     {
         // act
-        _testPhotoalbum = CreateAlbum();
+        _testPhotoalbum = CreateTestAlbum();
 
         // assert
         Assert.Equal(_testName, _testPhotoalbum.Title);
@@ -38,7 +35,7 @@ public class PhotoAlbumTests
     public void InitializesTravel()
     {
         // act
-        _testPhotoalbum = CreateAlbum();
+        _testPhotoalbum = CreateTestAlbum();
 
         // assert
         Assert.Equal(_testTravelId, _testPhotoalbum.TravelId);
@@ -48,7 +45,7 @@ public class PhotoAlbumTests
     public void AddPhotos_NotEmptyCollection_ReturnsTrue()
     {
         // arrange
-        _testPhotoalbum = CreateAlbum();
+        _testPhotoalbum = CreateTestAlbum();
         _testPhotos = GeneratePhotosArray();
 
         // act
@@ -62,7 +59,7 @@ public class PhotoAlbumTests
     public void AddPhotos_ContainsGivenPhoto_ReturnsTrue()
     {
         // arrange
-        _testPhotoalbum = CreateAlbum();
+        _testPhotoalbum = CreateTestAlbum();
         _testPhotos = GeneratePhotosArray();
         Photo testPhoto = new Photo("/img3.jpg");
 
@@ -77,7 +74,7 @@ public class PhotoAlbumTests
     public void RemovePhotos_IsEmptyCollection_ReturnsTrue()
     {
         // arrange
-        _testPhotoalbum = CreateAlbum();
+        _testPhotoalbum = CreateTestAlbum();
         _testPhotos = GeneratePhotosArray();
 
         // act
@@ -88,6 +85,6 @@ public class PhotoAlbumTests
             new Photo("/img3.jpg"));
 
         // assert
-        Assert.Equal(new Photo[0], _testPhotoalbum.Photos);
+        Assert.Empty(_testPhotoalbum.Photos);
     }
 }
