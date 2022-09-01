@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+using TravelBook.Core.Events;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TravelBook.Core.ProjectAggregate;
@@ -78,6 +78,8 @@ public class TravelsController : BaseController
 
                 async (Travel travel) =>
                 {
+                    int[] albumsId = travel.PhotoAlbums.Select(pa => pa.Id).ToArray();
+                    await _mediator.Publish(new TravelDeletedDomainEvent(UserId, travel.Id, albumsId));
                     await _travelRepository.Delete(travel);
                     return RedirectToAction(nameof(All));
                 });
