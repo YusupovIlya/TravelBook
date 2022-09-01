@@ -1,6 +1,4 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using TravelBook.Core.ProjectAggregate;
+﻿using TravelBook.Core.ProjectAggregate;
 
 namespace TravelBook.Web.Service;
 

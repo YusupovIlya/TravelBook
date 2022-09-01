@@ -121,7 +121,8 @@ public class PhotoAlbumsController : BaseController
     }
 
     [HttpGet]
-    public IActionResult Create([FromQuery] int travelId, [FromQuery] string returnUrl)
+    public IActionResult Create([FromQuery] int travelId, 
+                                [FromQuery] string? returnUrl = null)
     {
         ViewBag.TravelId = travelId;
         ViewBag.returnUrl = returnUrl;

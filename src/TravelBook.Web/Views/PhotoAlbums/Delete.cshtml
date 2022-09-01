@@ -28,7 +28,7 @@
         <form asp-action="Delete" asp-controller="PhotoAlbums" method="post">
             <input type="hidden" name="photoAlbumId" value="@Model.Id" />
             <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
-            <input type="submit" value="Delete" class="btn btn-danger" />
+            <button type="submit" value="Delete" class="btn btn-danger" />
         </form>
     </p>
     <p>
