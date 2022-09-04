@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  travelbook.web:
+    image: ${DOCKER_REGISTRY-}travelbookweb
+    ports:
+        - 5001:80
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  db:
+    container_name: db
+    image: postgres
+    volumes:
+    - db-data:/var/lib/postgresql/data
+    restart: always
+    environment:
+      - POSTGRES_DB=TravelBookDB
+      - POSTGRES_PASSWORD=pwd
+    ports:
+      - 5432:5432
+  
+volumes: 
+  db-data:
+   driver: local

@@ -6,42 +6,59 @@ public class FilesService: IFilesService
 {
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
-    public FilesService(IWebHostEnvironment environment, IConfiguration configuration)
+    private readonly ILogger<FilesService> _logger;
+    public FilesService(ILogger<FilesService> logger, 
+                        IWebHostEnvironment environment, 
+                        IConfiguration configuration)
     {
         _environment = environment;
         _configuration = configuration;
+        _logger = logger;
     }
 
     public void CreateAlbumFolder(string UserId, int photoAlbumId)
     {
         string albumFolderPath = GetAlbumFolderPath(UserId, photoAlbumId);
         if (!Directory.Exists(albumFolderPath))
+        {
             Directory.CreateDirectory(albumFolderPath);
+            _logger.LogInformation($"Created album folder - {albumFolderPath}");
+        }
     }
 
     public void CreateUserFolder(string UserId)
     {
         string userFolderPath = GetUserFolderPath(UserId);
-        if(!Directory.Exists(userFolderPath))
+        if (!Directory.Exists(userFolderPath))
+        {
             Directory.CreateDirectory(userFolderPath);
+            _logger.LogInformation($"Created user folder - {userFolderPath}");
+        }
     }
 
     public void DeleteAlbumFolder(string UserId, int photoAlbumId)
     {
         string albumFolderPath = GetAlbumFolderPath(UserId, photoAlbumId);
         if (Directory.Exists(albumFolderPath))
+        {
             Directory.Delete(albumFolderPath, true);
+            _logger.LogInformation($"Deleted album - {albumFolderPath}");
+        }
+        else
+            throw new FileNotFoundException($"Directory not found - {albumFolderPath}");
     }
 
     public void DeletePhoto(string relativePath)
     {
         relativePath = relativePath.Substring(1, relativePath.Length - 1);
-        relativePath = relativePath.Replace("/", "\\");
         string fullPath = Path.Combine(_environment.WebRootPath, relativePath);
         if (File.Exists(fullPath))
+        {
             File.Delete(fullPath);
+            _logger.LogInformation($"Deleted photo - {fullPath}");
+        }
         else
-            throw new FileNotFoundException();
+            throw new FileNotFoundException($"Photo not found - {fullPath}");
     }
 
     public string GetAlbumFolderPath(string UserId, int photoAlbumId)

@@ -22,7 +22,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7D8C5A23
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TravelBook.UnitTests", "tests\TravelBook.UnitTests\TravelBook.UnitTests.csproj", "{CFBD496D-7DA2-4061-844B-73BCEEF63385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBook.IntegrationTests", "tests\TravelBook.IntegrationTests\TravelBook.IntegrationTests.csproj", "{DCAD42AB-F731-40F4-B473-15DD9D7461E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TravelBook.IntegrationTests", "tests\TravelBook.IntegrationTests\TravelBook.IntegrationTests.csproj", "{DCAD42AB-F731-40F4-B473-15DD9D7461E7}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{298E5C52-CC6D-449D-9240-58784A2F3BCD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{867D79DA-B674-4052-8942-B9E46855362B}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,6 +101,18 @@ Global
 		{DCAD42AB-F731-40F4-B473-15DD9D7461E7}.Release|x64.Build.0 = Release|Any CPU
 		{DCAD42AB-F731-40F4-B473-15DD9D7461E7}.Release|x86.ActiveCfg = Release|Any CPU
 		{DCAD42AB-F731-40F4-B473-15DD9D7461E7}.Release|x86.Build.0 = Release|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Debug|x64.Build.0 = Debug|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Debug|x86.Build.0 = Debug|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Release|x64.ActiveCfg = Release|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Release|x64.Build.0 = Release|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Release|x86.ActiveCfg = Release|Any CPU
+		{298E5C52-CC6D-449D-9240-58784A2F3BCD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

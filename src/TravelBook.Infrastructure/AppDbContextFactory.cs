@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using System;
-using System.IO;
 
 namespace TravelBook.Infrastructure;
 
@@ -18,7 +16,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
         IConfigurationRoot config = builder.Build();
 
         string connectionString = config.GetConnectionString("AppDbContext");
-        optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder.UseNpgsql(connectionString);
         return new AppDbContext(optionsBuilder.Options);
     }
 }
